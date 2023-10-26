@@ -21,6 +21,7 @@ Several instances of the same program can be run concurrently, if different clas
  >bind = $mainMod CTRL, x, exec, hdrop kitty --class kitty_2
 >
 >bind = $mainMod, c, exec, hdrop foot -a foot_1
+>
 >bind = $mainMod CTRL, c, exec, hdrop foot -a foot_2
 
 Note: defining a class name is only necessary when running several instances of the same program.
