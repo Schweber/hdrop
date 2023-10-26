@@ -1,6 +1,6 @@
 # hdrop
 
-This script is meant to be started with keybindings and emulates the main feature of [tdrop](https://github.com/noctuid/tdrop) in `Hyprland`, namely:
+This script is meant to be started with keybindings and emulates the main feature of [tdrop](https://github.com/noctuid/tdrop) in [Hyprland](https://github.com/hyprwm/Hyprland), namely:
 
  - if the specified program is not running: launch it and bring it to the foreground.
  - if the specified program is already running on another workspace: bring it to the current workspace and focus it.
