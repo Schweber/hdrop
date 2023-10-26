@@ -1,6 +1,6 @@
 # hdrop
 
-This script is meant to be started with keybindings and emulates the main feature of [tdrop](https://github.com/noctuid/tdrop) in [Hyprland](https://github.com/hyprwm/Hyprland), namely:
+This Bash script is meant to be started with keybindings and emulates the main feature of [tdrop](https://github.com/noctuid/tdrop) in [Hyprland](https://github.com/hyprwm/Hyprland), namely:
 
  - if the specified program is not running: launch it and bring it to the foreground.
  - if the specified program is already running on another workspace: bring it to the current workspace and focus it.
@@ -36,14 +36,9 @@ Dependencies: bash jq hyprland
 
 ## Manual
 
-First, make sure that `jq` is in your PATH.
+Make sure that `bash`, `jq` and `hyprland` are in your PATH.
 
-Then, 
-
-Simple way: Download the script, make it executable and add it to your PATH. 
-
-Alternative: Clone the repo, cd to your desired tool, run `make` to build. To install, run
-`make install`. You may need root privileges.
+Download the script, make it executable and add it to your PATH. 
 
 ## hyprwm/contrib
 
