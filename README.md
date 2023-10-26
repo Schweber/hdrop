@@ -26,6 +26,9 @@ Several instances of the same program can be run concurrently, if different clas
 
 Note: defining a class name is only necessary when running several instances of the same program.
 
+If you want to run a program on boot and have it wait in the background until called up by hdrop you can use this:
+
+>exec-once = [workspace special:hdrop silent] librewolf
  
 # Installing
 
