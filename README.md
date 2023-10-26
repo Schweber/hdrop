@@ -1,6 +1,6 @@
 # hdrop
 
-This script is meant to be started with keybindings and emulates the main feature of tdrop (https://github.com/noctuid/tdrop) in `Hyprland`, namely:
+This script is meant to be started with keybindings and emulates the main feature of [tdrop](https://github.com/noctuid/tdrop) in `Hyprland`, namely:
 
  - if the specified program is not running: launch it and bring it to the foreground.
  - if the specified program is already running on another workspace: bring it to the current workspace and focus it.
@@ -31,4 +31,4 @@ Alternative: Clone the repo, cd to your desired tool, run `make` to build. To in
 
 ## hyprwm/contrib
 
-hdrop is part of hyprwm/contrib. There you can download a flake and add it to nix this way.
+`hdrop` is part of [hyprwm/contrib](https://github.com/hyprwm/contrib). There you can download a flake and add it to nix this way.
