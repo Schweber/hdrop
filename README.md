@@ -29,6 +29,8 @@ Note: defining a class name is only necessary when running several instances of 
 If you want to run a program on boot and have it wait in the background until called up by hdrop you can use this:
 
 >exec-once = [workspace special:hdrop silent] librewolf
+
+Dependencies: bash jq hyprland
  
 # Installing
 
