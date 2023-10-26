@@ -31,4 +31,4 @@ Alternative: Clone the repo, cd to your desired tool, run `make` to build. To in
 
 ## hyprwm/contrib
 
-`hdrop` is part of [hyprwm/contrib](https://github.com/hyprwm/contrib). There you can download a flake and add it to nix this way. There are also other useful scripts for `Hyprland`.
+`hdrop` is part of [hyprwm/contrib](https://github.com/hyprwm/contrib), which is a collection of useful scripts for `Hyprland`. There you can download a flake and add it to nix this way.
