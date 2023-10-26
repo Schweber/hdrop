@@ -35,7 +35,7 @@ First, make sure that `jq` is in your PATH.
 
 Then, 
 
-simple way: Download the script, make it executable and add it to your PATH. 
+Simple way: Download the script, make it executable and add it to your PATH. 
 
 Alternative: Clone the repo, cd to your desired tool, run `make` to build. To install, run
 `make install`. You may need root privileges.
