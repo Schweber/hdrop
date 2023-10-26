@@ -26,14 +26,14 @@ Several instances of the same program can be run concurrently, if different clas
 
 Note: defining a class name is only necessary when running several instances of the same program.
 
-**Dependency: `jq`**
-
  
 # Installing
 
 ## Manual
 
-Simple way: Download the script, make it executable and add it to your PATH. Make sure that `jq` is in your PATH.
+First, make sure that `jq` is in your PATH.
+
+Then, simple way: Download the script, make it executable and add it to your PATH. 
 
 Alternative: Clone the repo, cd to your desired tool, run `make` to build. To install, run
 `make install`. You may need root privileges.
