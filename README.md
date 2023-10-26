@@ -19,12 +19,20 @@ Several instances of the same program can be run concurrently, if different clas
  >bind = $mainMod, x, exec, hdrop kitty --class kitty_1
 >
  >bind = $mainMod CTRL, x, exec, hdrop kitty --class kitty_2
+>
+>bind = $mainMod, c, exec, hdrop foot -a foot_1
+>bind = $mainMod CTRL, c, exec, hdrop foot -a foot_2
+
+Note: defining a class name is only necessary when running several instances of the same program.
+
+**Dependency: `jq`**
+
  
 # Installing
 
 ## Manual
 
-Simple way: Download the script, make it executable and add it to your PATH.
+Simple way: Download the script, make it executable and add it to your PATH. Make sure that `jq` is in your PATH.
 
 Alternative: Clone the repo, cd to your desired tool, run `make` to build. To install, run
 `make install`. You may need root privileges.
