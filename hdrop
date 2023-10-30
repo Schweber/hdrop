@@ -45,23 +45,6 @@ notify() {
   }
 }
 
-basicChecks() {
-  check jq || {
-    notify "hdrop: Missing dependency 'jq'"
-    exit 1
-  }
-  check hyprctl || {
-    notify "hdrop: 'hyprctl' can't be executed"
-    exit 1
-  }
-  pgrep Hyprland &>/dev/null || {
-    notify "hdrop: Hyprland session could not be detected" "hdrop only works in Hyprland"
-    exit 1
-  }
-}
-
-basicChecks
-
 commandline="${*:1}"
 CLASS="$1"
 ACTIVE_WORKSPACE="$(hyprctl activeworkspace -j | jq -r .id)"
