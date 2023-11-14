@@ -29,7 +29,7 @@
 ##
 ## Dependencies: bash jq hyprland
 ## Part of: https://github.com/hyprwm/contrib
-## Author: Schweber (https://github.com/Schweber)
+## Author: Schweber (https://github.com/Schweber/hdrop)
 ## License: AGPL
 
 check() {
