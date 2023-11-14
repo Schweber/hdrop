@@ -41,7 +41,7 @@ notify() {
   check notify-send && {
     notify-send "$@"
   } || {
-    echo "$@"
+    hyprctl notify 0 5000 0 "$@"
   }
 }
 
