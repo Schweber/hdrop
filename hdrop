@@ -10,7 +10,7 @@ ACTIVE_WORKSPACE="$(hyprctl activeworkspace -j | jq -r .id)"
 
 case "$1" in
 "")
-  notify "hdrop: missing Argument" "Append the command you would like to execute, e.g. 'hdrop librewolf' \nRun 'hdrop -h' for more information"
+  notify "hdrop: missing Argument" "Append the command you would like to execute, e.g. 'hdrop librewolf'\nRun 'hdrop -h' for more information"
   exit 1
   ;;
 "-h" | "--help")
@@ -26,8 +26,6 @@ case "$1" in
   echo " -a ('foot' terminal emulator)"
   echo " --class (all other programs)."
   echo ""
-  echo "Please feel free to report missing flags for other programs!"
-  echo ""
   echo "Example bindings in Hyprland config:"
   echo ""
   echo ' bind = $mainMod, b, exec, hdrop librewolf'
@@ -42,6 +40,8 @@ case "$1" in
   echo ""
   echo " exec-once = [workspace special:hdrop silent] librewolf"
   echo ""
+  echo "Please feel free to report missing flags or peculiarities for other programs!"
+  echo ""
   echo "Dependencies: bash jq hyprland"
   echo "Part of: https://github.com/hyprwm/contrib"
   echo "Author: Schweber (https://github.com/Schweber/hdrop)"
@@ -51,6 +51,9 @@ case "$1" in
   ;;
 "foot")
   TEMP=$(getopt --options a: -n hdrop -- "$@")
+  ;;
+"telegram-desktop")
+  CLASS="org.telegram.desktop"
   ;;
 *)
   TEMP=$(getopt --longoptions class: -n hdrop -- "$@")
