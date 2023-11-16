@@ -2,15 +2,15 @@
 
 print_help() {
   echo ""
-  echo "This script emulates the main features of tdrop (https://github.com/noctuid/tdrop) in Hyprland."
-  echo ""
-  echo "Default beraviour:"
+  echo "This script emulates the main features of tdrop (https://github.com/noctuid/tdrop) in Hyprland:"
   echo ""
   echo " - if the specified program is not running: launch it and bring it to the foreground."
   echo " - if the specified program is already running on another workspace: bring it to the current workspace and focus it."
   echo " - if the specified program is already on the current workspace: move it to workspace 'special:hdrop', thereby hiding it until called up again by hdrop."
   echo ""
-  echo "Several instances of the same program can be run concurrently, if different class names are assigned to each instance. Presently there is support for the following flags:"
+  echo "Several instances of the same program can be run concurrently, if"
+  echo "different class names are assigned to each instance. Presently there is"
+  echo "support for the following flags in the [COMMAND] string:"
   echo ""
   echo " -a         ('foot' terminal emulator)"
   echo " --class    (all other programs)."
@@ -26,9 +26,15 @@ print_help() {
   echo "Note: defining a class name is only necessary when running several instances of the same program."
   echo ""
   echo ""
-  echo "Flags:"
+  echo "Usage: hdrop [OPTIONS] [COMMAND]"
   echo ""
-  echo "-b | --background    changes the default behaviour: if the specified program is not running, launch it in the background. Thereafter 'hdrop -b' will work the same as without this flag."
+  echo "Arguments:"
+  echo "  [COMMAND]"
+  echo "            The usual command you would run to start the desired program"
+  echo ""
+  echo "Options:"
+  echo "  -b, --background"
+  echo "           changes the default behaviour: if the specified program is not running, launch it in the background. Thereafter 'hdrop -b' will work the same as without this flag."
   echo ""
   echo ""
   echo "Please feel free to report missing flags or peculiarities for other programs!"
@@ -42,7 +48,7 @@ print_help() {
 
 print_version() {
   echo ""
-  echo "Version: 0.2.0"
+  echo "hdrop Version: 0.2.0"
 }
 
 notify() {
@@ -82,27 +88,23 @@ CLASS="$1"
 
 case "$1" in
 foot)
-  TEMP=$(getopt --options a: -n hdrop -- "$@")
+  OPT=$(getopt --options a: -n hdrop -- "$@")
   ;;
 telegram-desktop)
   CLASS="org.telegram.desktop"
   ;;
 *)
-  TEMP=$(getopt --longoptions class: -n hdrop -- "$@")
+  OPT=$(getopt --longoptions class: -n hdrop -- "$@")
   ;;
 esac
 
-if [[ -n $TEMP ]]; then
-  eval set -- "$TEMP"
+if [[ -n $OPT ]]; then
+  eval set -- "$OPT"
   while true; do
     case "$1" in
     -a | --class)
       CLASS="$2"
       shift 2
-      ;;
-    --)
-      shift
-      break
       ;;
     *) break ;;
     esac
@@ -110,10 +112,10 @@ if [[ -n $TEMP ]]; then
 fi
 
 if [[ $(hyprctl clients -j | jq -r ".[] | select(.class==\"$CLASS\" and .workspace.id!=$ACTIVE_WORKSPACE)") ]]; then
-  hyprctl dispatch -- movetoworkspacesilent "$ACTIVE_WORKSPACE","$CLASS" || notify "hdrop: Error moving '$commandline' to current workspace"
-  hyprctl dispatch -- focuswindow "$CLASS" || notify "hdrop: Error focusing '$commandline' on current workspace"
+  hyprctl dispatch -- movetoworkspacesilent "$ACTIVE_WORKSPACE","$CLASS" || notify "hdrop: Error moving '$COMMANDLINE' to current workspace"
+  hyprctl dispatch -- focuswindow "$CLASS" || notify "hdrop: Error focusing '$COMMANDLINE' on current workspace"
 elif [[ $(hyprctl clients -j | jq -r ".[] | select(.class==\"$CLASS\" and .workspace.id==$ACTIVE_WORKSPACE)") ]]; then
-  hyprctl dispatch -- movetoworkspacesilent special:hdrop,"$CLASS" || notify "hdrop: Error moving '$commandline' to workspace 'special:hdrop'"
+  hyprctl dispatch -- movetoworkspacesilent special:hdrop,"$CLASS" || notify "hdrop: Error moving '$COMMANDLINE' to workspace 'special:hdrop'"
 else
   $BACKGROUND $COMMANDLINE || notify "hdrop: Error executing given command" "$COMMANDLINE"
 fi
