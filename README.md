@@ -7,13 +7,13 @@
    - if the specified program is already running on another workspace: bring it to the current workspace and focus it.
    - if the specified program is already on the current workspace: move it to workspace 'special:hdrop', thereby hiding it until called up again by hdrop.
   
-  Usage: hdrop [OPTIONS] [COMMAND]
+  #### Usage: hdrop [OPTIONS] [COMMAND]
   
-  Arguments:
+  #### Arguments:
     [COMMAND]
             The usual command you would run to start the desired program
   
-  Options:
+  #### Options:
   >  -b, --background
             changes the default behaviour: if the specified program is
             not running, launch it in the background instead of foreground.
@@ -25,7 +25,7 @@
   >  -V, --version
             Print version
   
-  Multiple instances:
+  #### Multiple instances:
   
   Multiple instances of the same program can be run concurrently, if different class names are assigned to each instance. Presently there is support for the following flags in the [COMMAND] string:
   
@@ -33,7 +33,7 @@
  >
  >  --class    (all other programs).
   
-  Example bindings in Hyprland config:
+####  Example bindings in Hyprland config:
   
 > bind = $mainMod, b, exec, hdrop librewolf'
 >
