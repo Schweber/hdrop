@@ -12,8 +12,8 @@ This script emulates the main features of [tdrop](https://github.com/noctuid/tdr
 
 #### Arguments:
 
-[COMMAND]  
- The usual command you would run to start the desired program
+> [COMMAND]  
+> The usual command you would run to start the desired program
 
 #### Options:
 
