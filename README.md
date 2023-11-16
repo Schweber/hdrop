@@ -20,10 +20,10 @@ This script emulates the main features of [tdrop](https://github.com/noctuid/tdr
 > -b, --background  
 > changes the default behaviour: if the specified program is not running, launch it in the background instead of foreground. Thereafter 'hdrop -b' will work the same as without this flag.
 >
-> -h, --help
+> -h, --help  
 > Print this help message
 >
-> -V, --version
+> -V, --version  
 > Print version
 
 #### Multiple instances:
