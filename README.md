@@ -55,9 +55,9 @@ If you want to run a program on boot and have it wait in the background until ca
 
 Please feel free to report missing flags or peculiarities for other programs!
 
-Dependencies: bash jq hyprland
-Part of: https://github.com/hyprwm/contrib
-Author: Schweber (https://github.com/Schweber/hdrop)
+Dependencies: bash jq hyprland  
+Part of: https://github.com/hyprwm/contrib  
+Author: Schweber (https://github.com/Schweber/hdrop)  
 License: AGPL3
 
 # Installing
