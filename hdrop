@@ -33,6 +33,12 @@ print_help() {
   echo "Part of: https://github.com/hyprwm/contrib"
   echo "Author: Schweber (https://github.com/Schweber/hdrop)"
   echo "License: AGPL3"
+  print_version
+}
+
+print_version() {
+  echo ""
+  echo "Version: 0.1.6"
   echo ""
 }
 
@@ -49,8 +55,13 @@ case "$1" in
   print_help
   exit 1
   ;;
+# "-b" | "--background") ;;
 "-h" | "--help")
   print_help
+  exit
+  ;;
+"-v" | "--version")
+  print_version
   exit
   ;;
 "foot")
@@ -66,18 +77,21 @@ esac
 
 if [[ -n $TEMP ]]; then
   eval set -- "$TEMP"
+  echo $TEMP
   while true; do
     case "$1" in
     -a | --class)
       CLASS="$2"
       shift 2
       ;;
+    # !-) ;;
     --)
       shift
       break
       ;;
     *) break ;;
     esac
+    echo "$TEMP"
   done
 fi
 
