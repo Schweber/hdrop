@@ -14,30 +14,35 @@
             The usual command you would run to start the desired program
   
   Options:
-    -b, --background
+  >  -b, --background
             changes the default behaviour: if the specified program is
             not running, launch it in the background instead of foreground.
             Thereafter 'hdrop -b' will work the same as without this flag.
-  
-    -h, --help
+  >
+  >  -h, --help
             Print this help message
-  
-    -V, --version
+  >
+  >  -V, --version
             Print version
   
   Multiple instances:
   
   Multiple instances of the same program can be run concurrently, if different class names are assigned to each instance. Presently there is support for the following flags in the [COMMAND] string:
   
-   -a         ('foot' terminal emulator)
-   --class    (all other programs).
+ >  -a         ('foot' terminal emulator)
+ >
+ >  --class    (all other programs).
   
   Example bindings in Hyprland config:
   
 > bind = $mainMod, b, exec, hdrop librewolf'
+>
 > bind = $mainMod, x, exec, hdrop kitty --class kitty_1'
+>
 > bind = $mainMod CTRL, x, exec, hdrop kitty --class kitty_2'
+>
 > bind = $mainMod, c, exec, hdrop foot -a foot_1'
+>
 > bind = $mainMod CTRL, c, exec, hdrop foot -a foot_2'
   
   Note: defining a class name is only necessary when running several instances of the same program.
