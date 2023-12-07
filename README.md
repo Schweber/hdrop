@@ -54,14 +54,18 @@ Part of: https://github.com/hyprwm/contrib
 Author: Schweber (https://github.com/Schweber/hdrop)  
 License: AGPL3
 
-# Installing
+## Installation
 
-## Manual
+### Repositories
+
+[![Packaging status](https://repology.org/badge/vertical-allrepos/hdrop.svg)](https://repology.org/project/hdrop/versions)
+
+### Manual
 
 Make sure that `bash`, `jq` and `hyprland` are in your PATH.
 
 Download the script, make it executable and add it to your PATH.
 
-## hyprwm/contrib
+### hyprwm/contrib
 
 `hdrop` is part of [hyprwm/contrib](https://github.com/hyprwm/contrib), which is a collection of useful scripts for `Hyprland`.
