@@ -64,4 +64,4 @@ Download the script, make it executable and add it to your PATH.
 
 ## hyprwm/contrib
 
-`hdrop` is part of [hyprwm/contrib](https://github.com/hyprwm/contrib), which is a collection of useful scripts for `Hyprland`. There you can download a flake and add it to nix this way.
+`hdrop` is part of [hyprwm/contrib](https://github.com/hyprwm/contrib), which is a collection of useful scripts for `Hyprland`.

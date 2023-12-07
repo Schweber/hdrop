@@ -32,7 +32,7 @@ print_help() {
 }
 
 print_version() {
-  echo "hdrop version: 0.2.2"
+  echo "hdrop version: 0.2.5"
 }
 
 notify() {
@@ -73,6 +73,9 @@ ACTIVE_WORKSPACE="$(hyprctl activeworkspace -j | jq -r .id)" || notify "hdrop: E
 case "$1" in
 foot)
   OPT=$(getopt --options a: -n hdrop -- "$@")
+  ;;
+logseq)
+  CLASS="Logseq"
   ;;
 telegram-desktop)
   CLASS="org.telegram.desktop"
