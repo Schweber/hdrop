@@ -1,6 +1,6 @@
 # hdrop
 
-This script emulates the main features of [tdrop](https://github.com/noctuid/tdrop) in Hyprland:
+This Bash script emulates the main features of [tdrop](https://github.com/noctuid/tdrop) in Hyprland:
 
 - if the specified program is not running: launch it and bring it to the foreground.
 - if the specified program is already running on another workspace: bring it to the current workspace and focus it.
@@ -50,7 +50,6 @@ If you want to run a program on boot and have it wait in the background until ca
 Please feel free to report missing flags or peculiarities for other programs!
 
 Dependencies: bash jq hyprland  
-Part of: https://github.com/hyprwm/contrib  
 Author: Schweber (https://github.com/Schweber/hdrop)  
 License: AGPL3
 
