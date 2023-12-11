@@ -65,6 +65,10 @@ Make sure that `bash`, `jq` and `hyprland` are in your PATH.
 
 Download the script, make it executable and add it to your PATH.
 
+### Makefile
+
+Use the provided Makefile.
+
 ## See also
 
 `hdrop` is part of [hyprwm/contrib](https://github.com/hyprwm/contrib), which is a collection of useful scripts for `Hyprland`.
