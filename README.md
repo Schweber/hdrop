@@ -31,15 +31,15 @@ This Bash script emulates the main features of [tdrop](https://github.com/noctui
 Multiple instances of the same program can be run concurrently, if different class names are assigned to each instance. Presently there is support for the following flags in the [COMMAND] string:
 
 > -a ('foot' terminal emulator)  
-> --class (all other programs).
+> --class (all other programs)
 
 #### Example bindings in Hyprland config:
 
-> bind = $mainMod, b, exec, hdrop librewolf'  
-> bind = $mainMod, x, exec, hdrop kitty --class kitty_1'  
-> bind = $mainMod CTRL, x, exec, hdrop kitty --class kitty_2'  
-> bind = $mainMod, c, exec, hdrop foot -a foot_1'  
-> bind = $mainMod CTRL, c, exec, hdrop foot -a foot_2'
+> bind = $mainMod, b, exec, hdrop librewolf  
+> bind = $mainMod, x, exec, hdrop kitty --class kitty_1  
+> bind = $mainMod CTRL, x, exec, hdrop kitty --class kitty_2  
+> bind = $mainMod, c, exec, hdrop foot -a foot_1  
+> bind = $mainMod CTRL, c, exec, hdrop foot -a foot_2
 
 Note: defining a class name is only necessary when running several instances of the same program.
 
@@ -65,6 +65,6 @@ Make sure that `bash`, `jq` and `hyprland` are in your PATH.
 
 Download the script, make it executable and add it to your PATH.
 
-### hyprwm/contrib
+## See also
 
 `hdrop` is part of [hyprwm/contrib](https://github.com/hyprwm/contrib), which is a collection of useful scripts for `Hyprland`.
