@@ -13,6 +13,11 @@ print_help() {
   echo "          not running, launch it in the background instead of foreground."
   echo "          Thereafter 'hdrop -b' will work the same as without this flag."
   echo ""
+  echo "  -i, --insensitive"
+  echo "          case insensitive matching of class names."
+  echo "          Try this if a running program is not recognized and a new"
+  echo "          instance is launched instead."
+  echo ""
   echo "  -h, --help"
   echo "          Print this help message"
   echo ""
@@ -40,6 +45,9 @@ notify() {
 }
 
 BACKGROUND=""
+INSENSITIVE=false
+
+# shopt -s extglob
 
 case "$1" in
 "")
@@ -57,6 +65,15 @@ case "$1" in
   ;;
 -b | --background)
   BACKGROUND="hyprctl dispatch -- exec [workspace special:hdrop silent] "
+  shift
+  ;;
+-i | --insensitive)
+  INSENSITIVE=true
+  shift
+  ;;
+-bi | -ib)
+  BACKGROUND="hyprctl dispatch -- exec [workspace special:hdrop silent] "
+  INSENSITIVE=true
   shift
   ;;
 -*)
@@ -98,8 +115,12 @@ if [[ -n $OPT ]]; then
   # done
 fi
 
+if $INSENSITIVE && [[ $(hyprctl clients -j | jq -r ".[] | select((.class |test(\"$CLASS\";\"i\")))") ]]; then
+  CLASS=$(hyprctl clients -j | jq -r ".[] | select((.class |match(\"$CLASS\";\"i\"))) | .class" | head -1) || notify "hdrop: Error assigning case insensitive match to CLASS"
+fi
+
 if [[ $(hyprctl clients -j | jq -r ".[] | select(.class==\"$CLASS\" and .workspace.id!=$ACTIVE_WORKSPACE)") ]]; then
-  hyprctl dispatch -- movetoworkspacesilent "$ACTIVE_WORKSPACE","$CLASS" || notify "hdrop: Error moving '$COMMANDLINE' to current workspace"
+  hyprctl dispatch -- movetoworkspacesilent "$ACTIVE_WORKSPACE","(${CLASS})" || notify "hdrop: Error moving '$COMMANDLINE' to current workspace"
   hyprctl dispatch -- focuswindow "$CLASS" || notify "hdrop: Error focusing '$COMMANDLINE' on current workspace"
 elif [[ $(hyprctl clients -j | jq -r ".[] | select(.class==\"$CLASS\" and .workspace.id==$ACTIVE_WORKSPACE)") ]]; then
   hyprctl dispatch -- movetoworkspacesilent special:hdrop,"$CLASS" || notify "hdrop: Error moving '$COMMANDLINE' to workspace 'special:hdrop'"
