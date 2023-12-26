@@ -20,7 +20,7 @@ This Bash script emulates the main features of [tdrop](https://github.com/noctui
 > -b, --background  
 > changes the default behaviour: if the specified program is not running, launch it in the background instead of foreground. Thereafter 'hdrop -b' will work the same as without this flag.
 >
-> -i, --insensitive
+> -i, --insensitive  
 > case insensitive matching of class names. Try this if a running program is not recognized and a new instance is launched instead.
 >
 > -h, --help  
