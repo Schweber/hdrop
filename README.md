@@ -21,7 +21,11 @@ This Bash script emulates the main features of [tdrop](https://github.com/noctui
 > changes the default behaviour: if the specified program is not running, launch it in the background instead of foreground. Thereafter 'hdrop -b' will work the same as without this flag.
 >
 > -i, --insensitive  
-> case insensitive matching of class names. Try this if a running program is not recognized and a new instance is launched instead.
+> case insensitive partial matching of class names. Try this if a running program is not recognized and a new instance is launched instead.  
+> Note: incorrect matches may occur.
+>
+> -v, --verbose  
+> Show notifications regarding the matching process. Can be used to figure out why running programs are not matched."
 >
 > -h, --help  
 > Print this help message
@@ -50,11 +54,9 @@ If you want to run a program on boot and have it wait in the background until ca
 
 > exec-once = hdrop -b librewolf
 
-Please feel free to report missing flags or peculiarities for other programs!
+Please report missing flags or peculiarities for other programs so that i can add them!
 
-Dependencies: bash jq hyprland  
-Author: Schweber (https://github.com/Schweber/hdrop)  
-License: AGPL3
+Dependencies: bash jq hyprland
 
 ## Installation
 
@@ -64,9 +66,11 @@ License: AGPL3
 
 ### Manual
 
-Make sure that `bash`, `jq` and `hyprland` are in your PATH.
+Make sure that `bash` and `jq` are in your PATH.
 
 Download the script, make it executable and add it to your PATH.
+
+Note: `hdrop` will only work in a `hyprland` session.
 
 ### Makefile
 
