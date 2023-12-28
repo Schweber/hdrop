@@ -152,5 +152,5 @@ elif [[ $(hyprctl clients -j | jq -r ".[] | select(.class==\"$CLASS\" and .works
   if $VERBOSE; then notify_low "hdrop: Matched class '$CLASS' on current workspace and moved it to workspace 'special:hdrop'"; fi
 else
   $BACKGROUND $COMMANDLINE || notify "hdrop: Error executing given command" "$COMMANDLINE"
-  if $VERBOSE; then notify_low "hdrop: No running program matches class '$CLASS'" "Currently active classes are '$(hyprctl clients -j | jq -r '.[] | select(.mapped==true) | .class' | sort | tr '\n' ' ')'. Executed '$CLASS' in case it was not running already."; fi
+  if $VERBOSE; then notify_low "hdrop: No running program matches class '$CLASS'" "Currently active classes are '$(hyprctl clients -j | jq -r '.[] | select(.mapped==true) | .class' | sort | tr '\n' ' ')'. Executed '$COMMANDLINE' in case it was not running already."; fi
 fi
