@@ -141,7 +141,7 @@ if $INSENSITIVE && [[ $(hyprctl clients -j | jq -r ".[] | select((.class |test(\
 fi
 
 if [[ $(hyprctl clients -j | jq -r ".[] | select(.class==\"$CLASS\" and .workspace.id!=$ACTIVE_WORKSPACE)") ]]; then
-  hyprctl dispatch -- movetoworkspacesilent "$ACTIVE_WORKSPACE","(${CLASS})" || notify "hdrop: Error moving '$COMMANDLINE' to current workspace"
+  hyprctl dispatch -- movetoworkspacesilent "$ACTIVE_WORKSPACE","$CLASS" || notify "hdrop: Error moving '$COMMANDLINE' to current workspace"
   hyprctl dispatch -- focuswindow "$CLASS" || notify "hdrop: Error focusing '$COMMANDLINE' on current workspace"
   if $VERBOSE; then notify_low "hdrop: Matched class '$CLASS' on another workspace and moved it to current workspace"; fi
 elif [[ $(hyprctl clients -j | jq -r ".[] | select(.class==\"$CLASS\" and .workspace.id==$ACTIVE_WORKSPACE)") ]]; then
