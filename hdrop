@@ -20,7 +20,7 @@ print_help() {
   echo ""
   echo "  -v, --verbose"
   echo "          Show notifications regarding the matching process."
-  echo "          Try this to figure out why running programs are not matched."
+  echo "          Use this to figure out why running programs are not matched."
   echo ""
   echo "  -h, --help"
   echo "          Print this help message"
@@ -75,16 +75,16 @@ while true; do
     print_version
     exit
     ;;
-  -v | --verbose)
-    VERBOSE=true
-    shift
-    ;;
   -b | --background)
     BACKGROUND="hyprctl dispatch -- exec [workspace special:hdrop silent] "
     shift
     ;;
   -i | --insensitive)
     INSENSITIVE=true
+    shift
+    ;;
+  -v | --verbose)
+    VERBOSE=true
     shift
     ;;
   -bi | -ib)
@@ -136,7 +136,7 @@ fi
 
 if $INSENSITIVE && [[ $(hyprctl clients -j | jq -r ".[] | select((.class |test(\"$CLASS\";\"i\")))") ]]; then
   if $VERBOSE; then notify_low "hdrop: --insensitive -> Insensitive (partial) match of class '$CLASS' successful"; fi
-  CLASS=$(hyprctl clients -j | jq -r ".[] | select((.class |match(\"$CLASS\";\"i\"))) | .class" | head -1) || notify "hdrop: Error assigning case insensitive match to CLASS"
+  CLASS=$(hyprctl clients -j | jq -r ".[] | select((.class |match(\"$CLASS\";\"i\"))) | .class" | head -1) || notify "hdrop: Error assigning case insensitive (partial) match to CLASS"
   if $VERBOSE; then notify_low "hdrop: --insensitive -> Using class '$CLASS' after insensitive (partial) matching"; fi
 fi
 
