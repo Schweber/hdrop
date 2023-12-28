@@ -41,7 +41,7 @@ print_help() {
 }
 
 print_version() {
-  echo "hdrop version: 0.2.5"
+  echo "hdrop version: 0.3.0"
 }
 
 notify() {
@@ -54,11 +54,35 @@ notify_low() {
   echo "$@"
 }
 
-BACKGROUND=""
-INSENSITIVE=false
-VERBOSE=false
+hdrop_flags() {
+  while true; do
+    case "$1" in
+    -h | --help)
+      print_help
+      exit
+      ;;
+    -V | --version)
+      print_version
+      exit
+      ;;
+    -b | --background)
+      BACKGROUND="hyprctl dispatch -- exec [workspace special:hdrop silent] "
+      shift
+      ;;
+    -i | --insensitive)
+      INSENSITIVE=true
+      shift
+      ;;
+    -v | --verbose)
+      VERBOSE=true
+      shift
+      ;;
+    *) break ;;
+    esac
+  done
+}
 
-# shopt -s extglob
+HDROP_FLAGS=()
 
 while true; do
   case "$1" in
@@ -67,44 +91,23 @@ while true; do
     print_help
     exit 1
     ;;
-  -h | --help)
-    print_help
-    exit
-    ;;
-  -V | --version)
-    print_version
-    exit
-    ;;
-  -b | --background)
-    BACKGROUND="hyprctl dispatch -- exec [workspace special:hdrop silent] "
-    shift
-    ;;
-  -i | --insensitive)
-    INSENSITIVE=true
-    shift
-    ;;
-  -v | --verbose)
-    VERBOSE=true
-    shift
-    ;;
-  -bi | -ib)
-    BACKGROUND="hyprctl dispatch -- exec [workspace special:hdrop silent] "
-    INSENSITIVE=true
-    shift
-    ;;
-  -vi | -iv)
-    INSENSITIVE=true
-    VERBOSE=true
-    shift
-    ;;
   -*)
-    notify "hdrop: Unrecognized flag '$1'" "Run 'hdrop -h' for more information"
-    print_help
-    exit 1
+    HDROP_FLAGS+=("$1")
+    shift
     ;;
-  *) break ;;
+  *)
+    break
+    ;;
   esac
 done
+
+BACKGROUND=""
+INSENSITIVE=false
+VERBOSE=false
+
+if [[ -n $HDROP_FLAGS ]]; then
+  hdrop_flags $(getopt --options bivVh --longoptions background,insensitive,verbose,version,help -n hdrop -- "${HDROP_FLAGS[@]}")
+fi
 
 CLASS="$1"
 COMMANDLINE="${*:1}"
