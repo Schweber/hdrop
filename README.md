@@ -18,17 +18,16 @@ This Bash script emulates the main features of [tdrop](https://github.com/noctui
 #### Options:
 
 > -b, --background  
-> changes the default behaviour: if the specified program is not running, launch it in the background instead of foreground. Thereafter 'hdrop -b' will work the same as without this flag.
+> changes the default behaviour: if the specified program is not running, launch it in the background instead of in the foreground. Thereafter 'hdrop -b' will work the same as without this flag.
 >
 > -i, --insensitive  
-> case insensitive partial matching of class names. Try this if a running program is not recognized and a new instance is launched instead.  
-> Note: incorrect matches may occur.
+> Case insensitive partial matching of class names. Can work as a stopgap if a running program is not recognized and a new instance is launched instead. Note: incorrect matches may occur, adding a special handling of the program to `hdrop` is preferable.
 >
 > -v, --verbose  
-> Show notifications regarding the matching process. Can be used to figure out why running programs are not matched."
+> Show notifications regarding the matching process. Try this to figure out why running programs are not matched.
 >
 > -h, --help  
-> Print this help message
+> Print help message
 >
 > -V, --version  
 > Print version
@@ -37,7 +36,7 @@ This Bash script emulates the main features of [tdrop](https://github.com/noctui
 
 Multiple instances of the same program can be run concurrently, if different class names are assigned to each instance. Presently there is support for the following flags in the [COMMAND] string:
 
-> -a ('foot' terminal emulator)  
+> -a (`foot` terminal emulator)  
 > --class (all other programs)
 
 #### Example bindings in Hyprland config:
@@ -54,7 +53,7 @@ If you want to run a program on boot and have it wait in the background until ca
 
 > exec-once = hdrop -b librewolf
 
-Please report missing flags or peculiarities for other programs so that i can add them!
+Please report missing flags or peculiarities for other programs, so that i can add them!
 
 Dependencies: bash jq hyprland
 
@@ -70,7 +69,7 @@ Make sure that `bash` and `jq` are in your PATH.
 
 Download the script, make it executable and add it to your PATH.
 
-Note: `hdrop` will only work in a `hyprland` session.
+Note: `hdrop` will only work in a `Hyprland` session.
 
 ### Makefile
 

@@ -14,16 +14,16 @@ hdrop - run, show and hide programs on Hyprland
 	The usual command you would run to start the desired program
 
 *-b, --background*  
-	changes the default behaviour: if the specified program is not running, launch it in the background instead of foreground. Thereafter 'hdrop -b' will work the same as without this flag.
+	Changes the default behaviour: if the specified program is not running, launch it in the background instead of foreground. Thereafter 'hdrop -b' will work the same as without this flag.
 
 *-i, --insensitive*
-	case insensitive partial matching of class names. Try this if a running program is not recognized and a new instance is launched instead.
-
-*-h, --help*  
-	Print help message
+	Case insensitive partial matching of class names. Can work as a stopgap if a running program is not recognized and a new instance is launched instead. Note: incorrect matches may occur, adding a special handling of the program to `hdrop` is preferable.
 
 *-v, --verbose*  
 	Show notifications regarding the matching process. Can be used to figure out why running programs are not matched."
+
+*-h, --help*  
+	Print help message
 
 *-V, --version*  
 	Print version
