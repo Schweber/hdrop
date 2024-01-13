@@ -99,14 +99,15 @@ while true; do
     print_help
     exit 1
     ;;
+  -c | --class)
+    HDROP_FLAGS+=("$1" "$2")
+    shift 2
+    ;;
   -*)
     HDROP_FLAGS+=("$1")
     shift
     ;;
-  *)
-    HDROP_FLAGS+=("$2")
-    break
-    ;;
+  *) break ;;
   esac
 done
 
