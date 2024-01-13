@@ -21,7 +21,7 @@ This Bash script emulates the main features of [tdrop](https://github.com/noctui
 > Changes the default behaviour: if the specified program is not running, launch it in the background instead of in the foreground. Thereafter 'hdrop -b' will work the same as without this flag.
 >
 > -c, --class  
-> Set classname of the program to be run. Use this if the classname is different from the name of the [COMMAND].
+> Set classname of the program to be run. Use this if the classname is different from the name of the [COMMAND] and hdrop has not yet a hardcoded replacement.
 >
 > -i, --insensitive  
 > Case insensitive partial matching of class names. Can work as a stopgap if a running program is not recognized and a new instance is launched instead. Note: incorrect matches may occur, adding a special handling of the program to hdrop is preferable.
@@ -60,7 +60,9 @@ If you want to run a program on boot and have it wait in the background until ca
 
 If hdrop can't match an already running program and starts a new instance instead, then its class name is most likely different from its command name. For example, the class name of `telegram-desktop` is `org.telegram.desktop` and the class name of `logseq` is `Logseq`.
 
-Run `hdrop -v [COMMAND]` _in the terminal_ to see maximum output for troubleshooting and please report such peculiarities so that i can add them to hdrop. Using `hdrop -i [COMMAND]` might make it work in the meantime.
+Run `hdrop -v [COMMAND]` _in the terminal_ to see maximum output for troubleshooting and find out the actual class name. Then use `hdrop -c CLASSNAME` to make it work. `hdrop -i [COMMAND]` might be sufficient, as long a case insensitive (partial) match is sufficient.
+
+Please report instances of programs with differing class names, so that i can add them to `hdrop`.
 
 ## Installation
 

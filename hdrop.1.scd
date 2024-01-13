@@ -17,7 +17,7 @@ hdrop - run, show and hide programs on Hyprland
 	Changes the default behaviour: if the specified program is not running, launch it in the background instead of foreground. Thereafter 'hdrop -b' will work the same as without this flag.
 
 *-c, --class*
-	Set classname of the program to be run. Use this if the classname is different from the name of the [COMMAND].
+	Set classname of the program to be run. Use this if the classname is different from the name of the [COMMAND] and hdrop has not yet a hardcoded replacement.
 
 *-i, --insensitive*
 	Case insensitive partial matching of class names. Can work as a stopgap if a running program is not recognized and a new instance is launched instead. Note: incorrect matches may occur, adding a special handling of the program to `hdrop` is preferable.
