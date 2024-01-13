@@ -70,7 +70,9 @@ exec-once = hdrop -b librewolf
 
 If hdrop can't match an already running program and starts a new instance instead, then its class name is most likely different from its command name. For example, the class name of *telegram-desktop* is *org.telegram.desktop* and the class name of *logseq* is *Logseq*.
 
-Run *hdrop -v [COMMAND]* in the terminal to see maximum output for troubleshooting and please report such peculiarities so that i can add them to hdrop. Using *hdrop -i [COMMAND]* might make it work in the meantime.
+Run *hdrop -v [COMMAND]* _in the terminal_ to see maximum output for troubleshooting and find out the actual class name. Then use *hdrop -c CLASSNAME* to make it work. *hdrop -i [COMMAND]* might be sufficient, as long as a case insensitive (partial) match is sufficient.
+
+Please report instances of programs with differing class names, so that i can add them to `hdrop`.
 
 # License 
 
