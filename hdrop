@@ -46,7 +46,7 @@ print_help() {
 }
 
 print_version() {
-  echo "hdrop version: 0.3.1"
+  echo "hdrop version: 0.4.0"
 }
 
 notify() {
@@ -72,22 +72,20 @@ hdrop_flags() {
       ;;
     -b | --background)
       BACKGROUND="hyprctl dispatch -- exec [workspace special:hdrop silent] "
-      shift
       ;;
     -c | --class)
-      CLASS_OVERRIDE="$2"
-      shift 2
+      shift
+      CLASS_OVERRIDE="$1"
       ;;
     -i | --insensitive)
       INSENSITIVE=true
-      shift
       ;;
     -v | --verbose)
       VERBOSE=true
-      shift
       ;;
     *) break ;;
     esac
+    shift
   done
 }
 
@@ -102,14 +100,14 @@ while true; do
     ;;
   -c | --class)
     HDROP_FLAGS+=("$1" "$2")
-    shift 2
+    shift
     ;;
   -*)
     HDROP_FLAGS+=("$1")
-    shift
     ;;
   *) break ;;
   esac
+  shift
 done
 
 BACKGROUND=""
@@ -118,7 +116,7 @@ VERBOSE=false
 
 # shellcheck disable=SC2128
 if [[ -n $HDROP_FLAGS ]]; then
-  # shellcheck disable=SC2046
+  # shellcheck disable=SC2046 # avoids having to run 'eval set -- "$HDROP_FLAGS"' to remove leading whitespace
   hdrop_flags $(getopt --options bc:ivVh --longoptions background,class:,insensitive,verbose,version,help -n hdrop -- "${HDROP_FLAGS[@]}")
 fi
 
@@ -144,7 +142,7 @@ telegram-desktop)
 esac
 
 if [[ -n $OPT ]]; then
-  eval set -- "$OPT"
+  eval set -- "$OPT" # remove leading whitespace
   case "$1" in
   -a | --class)
     CLASS="$2"
@@ -173,5 +171,5 @@ elif [[ $(hyprctl clients -j | jq -r ".[] | select(.class==\"$CLASS\" and .works
   if $VERBOSE; then notify_low "hdrop: Matched class '$CLASS' on current workspace and moved it to workspace 'special:hdrop'"; fi
 else
   $BACKGROUND $COMMANDLINE || notify "hdrop: Error executing given command" "$COMMANDLINE"
-  if $VERBOSE; then notify_low "hdrop: No running program matches class '$CLASS'" "Currently active classes are '$(hyprctl clients -j | jq -r '.[] | select(.mapped==true) | .class' | sort | tr '\n' ' ')'. Executed '$COMMANDLINE' in case it was not running already."; fi
+  if $VERBOSE; then notify_low "hdrop: No running program matches class '$CLASS'." "Currently active classes are '$(hyprctl clients -j | jq -r '.[] | select(.mapped==true) | .class' | sort | tr '\n' ' ')'. Executed '$COMMANDLINE' in case it was not running already."; fi
 fi

@@ -24,7 +24,7 @@ This Bash script emulates the main features of [tdrop](https://github.com/noctui
 > Set classname of the program to be run. Use this if the classname is different from the name of the [COMMAND] and hdrop has not yet a hardcoded replacement.
 >
 > -i, --insensitive  
-> Case insensitive partial matching of class names. Can work as a stopgap if a running program is not recognized and a new instance is launched instead. Note: incorrect matches may occur, adding a special handling of the program to hdrop is preferable.
+> Case insensitive partial matching of class names. Can work as a stopgap if a running program is not recognized and a new instance is launched instead. Note: incorrect matches may occur, adding a special handling of the program to hdrop (hardcoded or via `-c, --class`) is preferable.
 >
 > -v, --verbose  
 > Show notifications regarding the matching process. Try this to figure out why running programs are not matched.
