@@ -76,7 +76,7 @@ Make sure that `bash` and `jq` are in your PATH.
 
 Download the script, make it executable and add it to your PATH.
 
-Note: `hdrop` will only work in a `Hyprland` session.
+Note: `hdrop` will only work in a `Hyprland` session. `exec-once = hdrop -b` might not work with this installation method.
 
 ### Makefile
 

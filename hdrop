@@ -46,7 +46,7 @@ print_help() {
 }
 
 print_version() {
-  echo "hdrop version: 0.4.4"
+  echo "hdrop version: 0.4.5"
 }
 
 notify() {
@@ -130,16 +130,19 @@ foot)
   ;;
 logseq)
   CLASS="Logseq"
-  if $VERBOSE; then notify_low "hdrop: Using '$CLASS' as hardcoded classname of '$1' for matching"; fi
   ;;
 telegram-desktop)
   CLASS="org.telegram.desktop"
-  if $VERBOSE; then notify_low "hdrop: Using '$CLASS' as hardcoded classname of '$1' for matching"; fi
+  ;;
+tor-browser)
+  CLASS="Tor Browser"
   ;;
 *)
   OPT=$(getopt --longoptions class: -n hdrop -- "$@")
   ;;
 esac
+
+if $VERBOSE && [[ $1 -ne $CLASS ]]; then notify_low "hdrop: Using '$CLASS' as hardcoded classname of '$1' for matching"; fi
 
 if [[ -n $OPT ]]; then
   eval set -- "$OPT" # remove leading whitespace
