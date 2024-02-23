@@ -25,6 +25,9 @@ print_help() {
   echo "  -d, --dimaround"
   echo "          If using -overlay: dimaround the overlay window."
   echo ""
+  echo "  -g, --gap"
+  echo "          If using -overlay: specify gap to screen edge in pixels."
+  echo ""
   echo "  -h, --height"
   echo "          If using -overlay: set the height of the window."
   echo "          Enter percentage value without % sign, e.g. '30'"
@@ -89,6 +92,7 @@ notify_low() {
 ANIMATION="popin"
 BACKGROUND=""
 DIMAROUND=false
+GAP=0
 INSENSITIVE=false
 OVERLAY=false
 POSITION="top"
@@ -106,6 +110,10 @@ hdrop_flags() {
       ;;
     -d | --dimaround)
       DIMAROUND=true
+      ;;
+    -g | --gap)
+      shift
+      GAP="$1"
       ;;
     -h | --height)
       shift
@@ -154,7 +162,7 @@ while true; do
     print_help
     exit 1
     ;;
-  -c | --class | -h | --height | -p | --position | -w | --width)
+  -c | --class | -g | --gap | -h | --height | -p | --position | -w | --width)
     HDROP_FLAGS+=("$1" "$2")
     shift
     ;;
@@ -169,7 +177,7 @@ done
 # shellcheck disable=SC2128 # erroneous warning
 if [[ -n $HDROP_FLAGS ]]; then
   # shellcheck disable=SC2046 # avoids having to run 'eval set -- "$HDROP_FLAGS"' to remove leading whitespace
-  hdrop_flags $(getopt -u --options bc:dh:Hiop:svVw: --longoptions background,class:,dimaround,height:,help,insensitive,overlay,position:,slide,verbose,version,width: -n hdrop -- "${HDROP_FLAGS[@]}")
+  hdrop_flags $(getopt -u --options bc:dg:h:Hiop:svVw: --longoptions background,class:,dimaround,gap:,height:,help,insensitive,overlay,position:,slide,verbose,version,width: -n hdrop -- "${HDROP_FLAGS[@]}")
 fi
 
 CLASS="$1"
@@ -222,22 +230,24 @@ if $OVERLAY; then
   "t" | "top")
     if [[ -n $WIDTH ]]; then WIDTH_xy=$WIDTH; else WIDTH_xy="100"; fi
     if [[ -n $HEIGHT ]]; then HEIGHT_xy=$HEIGHT; else HEIGHT_xy="50"; fi
-    POSITION_xy="$((50 - $WIDTH_xy / 2))% 0"
+    POSITION_xy="$((50 - $WIDTH_xy / 2))% $GAP"
     ;;
   "b" | "bottom")
     if [[ -n $WIDTH ]]; then WIDTH_xy=$WIDTH; else WIDTH_xy="100"; fi
     if [[ -n $HEIGHT ]]; then HEIGHT_xy=$HEIGHT; else HEIGHT_xy="50"; fi
-    POSITION_xy="$((50 - $WIDTH_xy / 2))% $((100 - $HEIGHT_xy))%"
+    ### TODO fix GAP
+    POSITION_xy="$((50 - $WIDTH_xy / 2))% $((100 - $HEIGHT_xy))%-$GAP"
     ;;
   "l" | "left")
     if [[ -n $WIDTH ]]; then WIDTH_xy=$WIDTH; else WIDTH_xy="50"; fi
     if [[ -n $HEIGHT ]]; then HEIGHT_xy=$HEIGHT; else HEIGHT_xy="100"; fi
-    POSITION_xy="0 $((50 - $HEIGHT_xy / 2))%"
+    POSITION_xy="$GAP $((50 - $HEIGHT_xy / 2))%"
     ;;
   "r" | "right")
     if [[ -n $WIDTH ]]; then WIDTH_xy=$WIDTH; else WIDTH_xy="50"; fi
     if [[ -n $HEIGHT ]]; then HEIGHT_xy=$HEIGHT; else HEIGHT_xy="100"; fi
-    POSITION_xy="$((100 - $WIDTH_xy))% $((50 - $HEIGHT_xy / 2))%"
+    ### TODO fix GAP
+    POSITION_xy="$((100 - $WIDTH_xy))%-$GAP $((50 - $HEIGHT_xy / 2))%"
     ;;
   *)
     notify "hdrop: --position -> invalid argument"
