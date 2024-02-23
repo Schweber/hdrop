@@ -23,7 +23,7 @@ print_help() {
   echo "          and hdrop has not yet a hardcoded replacement."
   echo ""
   echo "  -d, --dimaround"
-  echo "          Dimaround the overlay window."
+  echo "          If using -overlay: dimaround the overlay window."
   echo ""
   echo "  -h, --height"
   echo "          If using -overlay: set the height of the window."
@@ -44,7 +44,7 @@ print_help() {
   echo "          One of: '[t]op' '[b]ottom' '[l]eft' '[r]ight'."
   echo ""
   echo "  -s, --slide"
-  echo "          'slide' the window in. Default is 'popin'."
+  echo "          If using -overlay: 'slide' the window in. Default is 'popin'."
   echo ""
   echo "  -v, --verbose"
   echo "          Show notifications regarding the matching process."
@@ -126,7 +126,6 @@ hdrop_flags() {
       POSITION="$1"
       ;;
     -s | --slide)
-      shift
       ANIMATION="slide"
       ;;
     -v | --verbose)
@@ -257,7 +256,7 @@ elif [[ $(hyprctl clients -j | jq -r ".[] | select(.class==\"$CLASS\" and .works
   hyprctl dispatch -- movetoworkspacesilent special:hdrop,"^$CLASS$" || notify "hdrop: Error moving '$COMMANDLINE' to workspace 'special:hdrop'"
   if $VERBOSE; then notify_low "hdrop: Matched class '$CLASS' on current workspace and moved it to workspace 'special:hdrop'"; fi
 else
-  # shellcheck disable=SC2086 # stops working if quoting COMMANDLINE=foot -a foot_1
+  # shellcheck disable=SC2086 # quoting COMMANDLINE=foot -a foot_1 doesn't work
   $BACKGROUND $COMMANDLINE || notify "hdrop: Error executing given command" "$COMMANDLINE"
   if $VERBOSE; then notify_low "hdrop: No running program matches class '$CLASS'." "Currently active classes are '$(hyprctl clients -j | jq -r '.[] | select(.mapped==true) | .class' | sort | tr '\n' ' ')'. Executed '$COMMANDLINE' in case it was not running already."; fi
 fi
