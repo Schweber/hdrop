@@ -170,7 +170,7 @@ done
 # shellcheck disable=SC2128 # erroneous warning
 if [[ -n $HDROP_FLAGS ]]; then
   # shellcheck disable=SC2046 # avoids having to run 'eval set -- "$HDROP_FLAGS"' to remove leading whitespace
-  hdrop_flags $(getopt -u --options bc:dh:Hiop:svVw:V --longoptions background,class:,dimaround,help,insensitive,overlay,position:,slide,verbose,version,width -n hdrop -- "${HDROP_FLAGS[@]}")
+  hdrop_flags $(getopt -u --options bc:dh:Hiop:svVw: --longoptions background,class:,dimaround,height:,help,insensitive,overlay,position:,slide,verbose,version,width: -n hdrop -- "${HDROP_FLAGS[@]}")
 fi
 
 CLASS="$1"
