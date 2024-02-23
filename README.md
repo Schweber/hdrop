@@ -60,7 +60,7 @@ If you want to run a program on boot and have it wait in the background until ca
 
 ### Cursor jumps to newly focused windows
 
-Set `no_cursor_warps = true` in [hyprland.conf](https://wiki.hyprland.org/Configuring/Variables/#general)
+Set `no_cursor_warps = true` in `hyprland.conf` section [general](https://wiki.hyprland.org/Configuring/Variables/#general)
 
 ### Further instances of programs are started instead of hiding/unhiding a running instance
 
