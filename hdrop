@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# shellcheck disable=SC2004 # $ sign needed for the caclculations to take place
+
+### TODO add smart positioning
+
 print_help() {
   echo ""
   echo "Usage: hdrop [OPTIONS] [COMMAND]"
@@ -18,16 +22,39 @@ print_help() {
   echo "          classname is different from the name of the [COMMAND]"
   echo "          and hdrop has not yet a hardcoded replacement."
   echo ""
+  echo "  -d, --dimaround"
+  echo "          Dimaround the window."
+  echo ""
+  echo "  -h, --height"
+  echo "          If using -overlay: set the height of the window."
+  echo "          Enter percentage value without % sign, e.g. '30'"
+  echo ""
   echo "  -i, --insensitive"
   echo "          Case insensitive partial matching of class names."
   echo "          You can try this if a running program is not recognized and"
   echo "          a new instance is launched instead."
   echo ""
+  echo "  -o, --overlay"
+  echo "          Overlay as a floating window on top of other windows."
+  echo "          Standard is top half, full width, popin animation."
+  echo "          Can be adjusted with -d, -h, -s and -w."
+  echo ""
+  echo "  -p, --position"
+  echo "          If using -overlay: set the position of the window."
+  echo "          One of: '[t]op' '[b]ottom' '[l]eft' '[r]ight'."
+  echo ""
+  echo "  -s, --slide"
+  echo "          'slide' the window in. Default is 'popin'."
+  echo ""
   echo "  -v, --verbose"
   echo "          Show notifications regarding the matching process."
   echo "          Use this to figure out why running programs are not matched."
   echo ""
-  echo "  -h, --help"
+  echo "  -w, --width"
+  echo "          If using -overlay: set the width of the window."
+  echo "          Enter percentage value without % sign, e.g. '30'"
+  echo ""
+  echo "  -H, --help"
   echo "          Print this help message"
   echo ""
   echo "  -V, --version"
@@ -46,7 +73,7 @@ print_help() {
 }
 
 print_version() {
-  echo "hdrop version: 0.4.5"
+  echo "hdrop version: 0.5.0-dev"
 }
 
 notify() {
@@ -59,17 +86,17 @@ notify_low() {
   echo "$@"
 }
 
+ANIMATION="popin"
+BACKGROUND=""
+DIMAROUND=false
+INSENSITIVE=false
+OVERLAY=false
+POSITION="top"
+VERBOSE=false
+
 hdrop_flags() {
   while true; do
     case "$1" in
-    -h | --help)
-      print_help
-      exit
-      ;;
-    -V | --version)
-      print_version
-      exit
-      ;;
     -b | --background)
       BACKGROUND="hyprctl dispatch -- exec [workspace special:hdrop silent] "
       ;;
@@ -77,11 +104,41 @@ hdrop_flags() {
       shift
       CLASS_OVERRIDE="$1"
       ;;
+    -d | --dimaround)
+      DIMAROUND=true
+      ;;
+    -h | --height)
+      shift
+      HEIGHT="$1"
+      ;;
+    -H | --help)
+      print_help
+      exit
+      ;;
     -i | --insensitive)
       INSENSITIVE=true
       ;;
+    -o | --overlay)
+      OVERLAY=true
+      ;;
+    -p | --position)
+      shift
+      POSITION="$1"
+      ;;
+    -s | --slide)
+      shift
+      ANIMATION="slide"
+      ;;
     -v | --verbose)
       VERBOSE=true
+      ;;
+    -V | --version)
+      print_version
+      exit
+      ;;
+    -w | --width)
+      shift
+      WIDTH="$1"
       ;;
     *) break ;;
     esac
@@ -98,7 +155,7 @@ while true; do
     print_help
     exit 1
     ;;
-  -c | --class)
+  -c | --class | -h | --height | -p | --position | -w | --width)
     HDROP_FLAGS+=("$1" "$2")
     shift
     ;;
@@ -110,14 +167,10 @@ while true; do
   shift
 done
 
-BACKGROUND=""
-INSENSITIVE=false
-VERBOSE=false
-
-# shellcheck disable=SC2128
+# shellcheck disable=SC2128 # erroneous warning
 if [[ -n $HDROP_FLAGS ]]; then
   # shellcheck disable=SC2046 # avoids having to run 'eval set -- "$HDROP_FLAGS"' to remove leading whitespace
-  hdrop_flags $(getopt -u --options bc:ivVh --longoptions background,class:,insensitive,verbose,version,help -n hdrop -- "${HDROP_FLAGS[@]}")
+  hdrop_flags $(getopt -u --options bc:dh:Hiop:svVw:V --longoptions background,class:,dimaround,help,insensitive,overlay,position:,slide,verbose,version,width -n hdrop -- "${HDROP_FLAGS[@]}")
 fi
 
 CLASS="$1"
@@ -165,14 +218,46 @@ if [[ -n $CLASS_OVERRIDE ]]; then
   CLASS="$CLASS_OVERRIDE"
 fi
 
+if $OVERLAY; then
+  case "$POSITION" in
+  "t" | "top")
+    if [[ -n $WIDTH ]]; then WIDTH_xy=$WIDTH; else WIDTH_xy="100"; fi
+    if [[ -n $HEIGHT ]]; then HEIGHT_xy=$HEIGHT; else HEIGHT_xy="50"; fi
+    POSITION_xy="$((50 - $WIDTH_xy / 2))% 0"
+    ;;
+  "b" | "bottom")
+    if [[ -n $WIDTH ]]; then WIDTH_xy=$WIDTH; else WIDTH_xy="100"; fi
+    if [[ -n $HEIGHT ]]; then HEIGHT_xy=$HEIGHT; else HEIGHT_xy="50"; fi
+    POSITION_xy="$((50 - $WIDTH_xy / 2))% $((100 - $HEIGHT_xy))%"
+    ;;
+  "l" | "left")
+    if [[ -n $WIDTH ]]; then WIDTH_xy=$WIDTH; else WIDTH_xy="50"; fi
+    if [[ -n $HEIGHT ]]; then HEIGHT_xy=$HEIGHT; else HEIGHT_xy="100"; fi
+    POSITION_xy="0 $((50 - $HEIGHT_xy / 2))%"
+    ;;
+  "r" | "right")
+    if [[ -n $WIDTH ]]; then WIDTH_xy=$WIDTH; else WIDTH_xy="50"; fi
+    if [[ -n $HEIGHT ]]; then HEIGHT_xy=$HEIGHT; else HEIGHT_xy="100"; fi
+    POSITION_xy="$((100 - $WIDTH_xy))% $((50 - $HEIGHT_xy / 2))%"
+    ;;
+  *)
+    notify "hdrop: --position -> invalid argument"
+    ;;
+  esac
+  hyprctl --batch "keyword windowrule float,^$CLASS$ ; keyword windowrule move $POSITION_xy,^$CLASS$ ; keyword windowrule size $WIDTH_xy% $HEIGHT_xy%,^$CLASS$ ; keyword windowrule animation $ANIMATION,^$CLASS$"
+  if $DIMAROUND; then hyprctl keyword windowrule dimaround,"^$CLASS$"; fi
+fi
+
 if [[ $(hyprctl clients -j | jq -r ".[] | select(.class==\"$CLASS\" and .workspace.id!=$ACTIVE_WORKSPACE)") ]]; then
-  hyprctl dispatch -- movetoworkspacesilent "$ACTIVE_WORKSPACE","$CLASS" || notify "hdrop: Error moving '$COMMANDLINE' to current workspace"
-  hyprctl dispatch -- focuswindow "$CLASS" || notify "hdrop: Error focusing '$COMMANDLINE' on current workspace"
+  # shellcheck disable=SC2140 # erroneous warning
+  hyprctl dispatch -- movetoworkspacesilent "$ACTIVE_WORKSPACE","^$CLASS$" || notify "hdrop: Error moving '$COMMANDLINE' to current workspace"
+  hyprctl dispatch -- focuswindow "^$CLASS$" || notify "hdrop: Error focusing '$COMMANDLINE' on current workspace"
   if $VERBOSE; then notify_low "hdrop: Matched class '$CLASS' on another workspace and moved it to current workspace"; fi
 elif [[ $(hyprctl clients -j | jq -r ".[] | select(.class==\"$CLASS\" and .workspace.id==$ACTIVE_WORKSPACE)") ]]; then
-  hyprctl dispatch -- movetoworkspacesilent special:hdrop,"$CLASS" || notify "hdrop: Error moving '$COMMANDLINE' to workspace 'special:hdrop'"
+  hyprctl dispatch -- movetoworkspacesilent special:hdrop,"^$CLASS$" || notify "hdrop: Error moving '$COMMANDLINE' to workspace 'special:hdrop'"
   if $VERBOSE; then notify_low "hdrop: Matched class '$CLASS' on current workspace and moved it to workspace 'special:hdrop'"; fi
 else
+  # shellcheck disable=SC2086 # stops working if quoting COMMANDLINE=foot -a foot_1
   $BACKGROUND $COMMANDLINE || notify "hdrop: Error executing given command" "$COMMANDLINE"
   if $VERBOSE; then notify_low "hdrop: No running program matches class '$CLASS'." "Currently active classes are '$(hyprctl clients -j | jq -r '.[] | select(.mapped==true) | .class' | sort | tr '\n' ' ')'. Executed '$COMMANDLINE' in case it was not running already."; fi
 fi
