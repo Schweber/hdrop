@@ -237,7 +237,6 @@ if $FLOATING; then
   "r" | "right")
     if [[ -n $WIDTH ]]; then WIDTH_xy=$WIDTH; else WIDTH_xy="50"; fi
     if [[ -n $HEIGHT ]]; then HEIGHT_xy=$HEIGHT; else HEIGHT_xy="100"; fi
-    notify $ACTIVE_MONITOR_WIDTH_SCALED
     POSITION_xy="$(($ACTIVE_MONITOR_WIDTH_SCALED * $WIDTH_xy / 100 - $GAP)) $((50 - $HEIGHT_xy / 2))%"
     ;;
   *)
