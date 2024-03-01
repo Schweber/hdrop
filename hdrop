@@ -2,8 +2,6 @@
 
 # shellcheck disable=SC2004 # $ sign needed for the caclculations to take place
 
-### TODO add smart positioning
-
 print_help() {
   echo ""
   echo "Usage: hdrop [OPTIONS] [COMMAND]"
@@ -20,16 +18,13 @@ print_help() {
   echo "  -c, --class"
   echo "          Set classname of the program to be run. Use this if the"
   echo "          classname is different from the name of the [COMMAND]"
-  echo "          and hdrop has not yet a hardcoded replacement."
-  echo ""
-  echo "  -d, --dimaround"
-  echo "          If using -overlay: dimaround the overlay window."
+  echo "          and hdrop has no hardcoded replacement."
   echo ""
   echo "  -g, --gap"
-  echo "          If using -overlay: specify gap to screen edge in pixels."
+  echo "          If using --floating: specify gap to the screen edge in pixels."
   echo ""
   echo "  -h, --height"
-  echo "          If using -overlay: set the height of the window."
+  echo "          If using --floating: set the height of the window."
   echo "          Enter percentage value without % sign, e.g. '30'"
   echo ""
   echo "  -i, --insensitive"
@@ -37,24 +32,21 @@ print_help() {
   echo "          You can try this if a running program is not recognized and"
   echo "          a new instance is launched instead."
   echo ""
-  echo "  -o, --overlay"
-  echo "          Overlay as a floating window on top of other windows."
-  echo "          Standard is top half, full width, popin, no dimaround."
-  echo "          Can be adjusted with -d, -h, -s and -w."
+  echo "  -f, --floating"
+  echo "          Spawn as a floating window."
+  echo "          Standard is top half, full width, no gap."
+  echo "          Can be adjusted with -g, -h, -p and -w."
   echo ""
   echo "  -p, --position"
-  echo "          If using -overlay: set the position of the window."
+  echo "          If using --floating: set the position of the window."
   echo "          One of: '[t]op' '[b]ottom' '[l]eft' '[r]ight'."
-  echo ""
-  echo "  -s, --slide"
-  echo "          If using -overlay: 'slide' the window in. Default is 'popin'."
   echo ""
   echo "  -v, --verbose"
   echo "          Show notifications regarding the matching process."
   echo "          Use this to figure out why running programs are not matched."
   echo ""
   echo "  -w, --width"
-  echo "          If using -overlay: set the width of the window."
+  echo "          If using --floating: set the width of the window."
   echo "          Enter percentage value without % sign, e.g. '30'"
   echo ""
   echo "  -H, --help"
@@ -89,12 +81,10 @@ notify_low() {
   echo "$@"
 }
 
-ANIMATION="popin"
 BACKGROUND=""
-DIMAROUND=false
 GAP=0
 INSENSITIVE=false
-OVERLAY=false
+FLOATING=false
 POSITION="top"
 VERBOSE=false
 
@@ -108,8 +98,8 @@ hdrop_flags() {
       shift
       CLASS_OVERRIDE="$1"
       ;;
-    -d | --dimaround)
-      DIMAROUND=true
+    -f | --floating)
+      FLOATING=true
       ;;
     -g | --gap)
       shift
@@ -126,15 +116,9 @@ hdrop_flags() {
     -i | --insensitive)
       INSENSITIVE=true
       ;;
-    -o | --overlay)
-      OVERLAY=true
-      ;;
     -p | --position)
       shift
       POSITION="$1"
-      ;;
-    -s | --slide)
-      ANIMATION="slide"
       ;;
     -v | --verbose)
       VERBOSE=true
@@ -177,7 +161,7 @@ done
 # shellcheck disable=SC2128 # erroneous warning
 if [[ -n $HDROP_FLAGS ]]; then
   # shellcheck disable=SC2046 # avoids having to run 'eval set -- "$HDROP_FLAGS"' to remove leading whitespace
-  hdrop_flags $(getopt -u --options bc:dg:h:Hiop:svVw: --longoptions background,class:,dimaround,gap:,height:,help,insensitive,overlay,position:,slide,verbose,version,width: -n hdrop -- "${HDROP_FLAGS[@]}")
+  hdrop_flags $(getopt -u --options bc:fg:h:Hip:vVw: --longoptions background,class:,floating,gap:,height:,help,insensitive,position:,verbose,version,width: -n hdrop -- "${HDROP_FLAGS[@]}")
 fi
 
 CLASS="$1"
@@ -225,7 +209,15 @@ if [[ -n $CLASS_OVERRIDE ]]; then
   CLASS="$CLASS_OVERRIDE"
 fi
 
-if $OVERLAY; then
+if $FLOATING; then
+  # if [[ $GAP -ne 0 ]]; then
+  ACTIVE_MONITOR_WIDTH=$(($(hyprctl monitors -j | jq -r ".[] | select(.focused==true) | .width") * 100))
+  ACTIVE_MONITOR_HEIGHT=$(($(hyprctl monitors -j | jq -r ".[] | select(.focused==true) | .height") * 100))
+  ACTIVE_MONITOR_SCALE=$(awk "BEGIN {printf $(hyprctl monitors -j | jq -r ".[] | select(.focused==true) | .scale") * 100}")
+  ACTIVE_MONITOR_WIDTH_SCALED=$(($ACTIVE_MONITOR_WIDTH / $ACTIVE_MONITOR_SCALE))
+  ACTIVE_MONITOR_HEIGHT_SCALED=$(($ACTIVE_MONITOR_HEIGHT / $ACTIVE_MONITOR_SCALE))
+  # fi
+
   case "$POSITION" in
   "t" | "top")
     if [[ -n $WIDTH ]]; then WIDTH_xy=$WIDTH; else WIDTH_xy="100"; fi
@@ -235,8 +227,7 @@ if $OVERLAY; then
   "b" | "bottom")
     if [[ -n $WIDTH ]]; then WIDTH_xy=$WIDTH; else WIDTH_xy="100"; fi
     if [[ -n $HEIGHT ]]; then HEIGHT_xy=$HEIGHT; else HEIGHT_xy="50"; fi
-    ### TODO fix GAP
-    POSITION_xy="$((50 - $WIDTH_xy / 2))% $((100 - $HEIGHT_xy))%-$GAP"
+    POSITION_xy="$((50 - $WIDTH_xy / 2))% $(($ACTIVE_MONITOR_HEIGHT_SCALED * $HEIGHT_xy / 100 - $GAP))"
     ;;
   "l" | "left")
     if [[ -n $WIDTH ]]; then WIDTH_xy=$WIDTH; else WIDTH_xy="50"; fi
@@ -246,15 +237,14 @@ if $OVERLAY; then
   "r" | "right")
     if [[ -n $WIDTH ]]; then WIDTH_xy=$WIDTH; else WIDTH_xy="50"; fi
     if [[ -n $HEIGHT ]]; then HEIGHT_xy=$HEIGHT; else HEIGHT_xy="100"; fi
-    ### TODO fix GAP
-    POSITION_xy="$((100 - $WIDTH_xy))%-$GAP $((50 - $HEIGHT_xy / 2))%"
+    notify $ACTIVE_MONITOR_WIDTH_SCALED
+    POSITION_xy="$(($ACTIVE_MONITOR_WIDTH_SCALED * $WIDTH_xy / 100 - $GAP)) $((50 - $HEIGHT_xy / 2))%"
     ;;
   *)
     notify "hdrop: --position -> invalid argument"
     ;;
   esac
-  hyprctl --batch "keyword windowrule float,^$CLASS$ ; keyword windowrule move $POSITION_xy,^$CLASS$ ; keyword windowrule size $WIDTH_xy% $HEIGHT_xy%,^$CLASS$ ; keyword windowrule animation $ANIMATION,^$CLASS$"
-  if $DIMAROUND; then hyprctl keyword windowrule dimaround,"^$CLASS$"; fi
+  hyprctl --batch "keyword windowrule float,^$CLASS$ ; keyword windowrule move $POSITION_xy,^$CLASS$ ; keyword windowrule size $WIDTH_xy% $HEIGHT_xy%,^$CLASS$"
 fi
 
 if [[ $(hyprctl clients -j | jq -r ".[] | select(.class==\"$CLASS\" and .workspace.id!=$ACTIVE_WORKSPACE)") ]]; then
