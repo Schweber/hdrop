@@ -20,6 +20,11 @@ print_help() {
   echo "          classname is different from the name of the [COMMAND]"
   echo "          and hdrop has no hardcoded replacement."
   echo ""
+  echo "  -f, --floating"
+  echo "          Spawn as a floating window."
+  echo "          Standard is top half, full width, no gap."
+  echo "          Can be adjusted with -g, -h, -p and -w."
+  echo ""
   echo "  -g, --gap"
   echo "          If using --floating: specify gap to the screen edge in pixels."
   echo ""
@@ -27,15 +32,13 @@ print_help() {
   echo "          If using --floating: set the height of the window."
   echo "          Enter percentage value without % sign, e.g. '30'"
   echo ""
+  echo "  -H, --help"
+  echo "          Print this help message"
+  echo ""
   echo "  -i, --insensitive"
   echo "          Case insensitive partial matching of class names."
   echo "          You can try this if a running program is not recognized and"
   echo "          a new instance is launched instead."
-  echo ""
-  echo "  -f, --floating"
-  echo "          Spawn as a floating window."
-  echo "          Standard is top half, full width, no gap."
-  echo "          Can be adjusted with -g, -h, -p and -w."
   echo ""
   echo "  -p, --position"
   echo "          If using --floating: set the position of the window."
@@ -45,15 +48,12 @@ print_help() {
   echo "          Show notifications regarding the matching process."
   echo "          Use this to figure out why running programs are not matched."
   echo ""
+  echo "  -V, --version"
+  echo "          Print version"
+  echo ""
   echo "  -w, --width"
   echo "          If using --floating: set the width of the window."
   echo "          Enter percentage value without % sign, e.g. '30'"
-  echo ""
-  echo "  -H, --help"
-  echo "          Print this help message"
-  echo ""
-  echo "  -V, --version"
-  echo "          Print version"
   echo ""
   echo "Multiple instances:"
   echo ""
@@ -68,7 +68,7 @@ print_help() {
 }
 
 print_version() {
-  echo "hdrop version: 0.5.0-dev"
+  echo "hdrop version: 0.5.0"
 }
 
 notify() {
@@ -210,13 +210,13 @@ if [[ -n $CLASS_OVERRIDE ]]; then
 fi
 
 if $FLOATING; then
-  # if [[ $GAP -ne 0 ]]; then
-  ACTIVE_MONITOR_WIDTH=$(($(hyprctl monitors -j | jq -r ".[] | select(.focused==true) | .width") * 100))
-  ACTIVE_MONITOR_HEIGHT=$(($(hyprctl monitors -j | jq -r ".[] | select(.focused==true) | .height") * 100))
-  ACTIVE_MONITOR_SCALE=$(awk "BEGIN {printf $(hyprctl monitors -j | jq -r ".[] | select(.focused==true) | .scale") * 100}")
-  ACTIVE_MONITOR_WIDTH_SCALED=$(($ACTIVE_MONITOR_WIDTH / $ACTIVE_MONITOR_SCALE))
-  ACTIVE_MONITOR_HEIGHT_SCALED=$(($ACTIVE_MONITOR_HEIGHT / $ACTIVE_MONITOR_SCALE))
-  # fi
+  if [[ $GAP -ne 0 ]]; then
+    ACTIVE_MONITOR_WIDTH=$(($(hyprctl monitors -j | jq -r ".[] | select(.focused==true) | .width") * 100))
+    ACTIVE_MONITOR_HEIGHT=$(($(hyprctl monitors -j | jq -r ".[] | select(.focused==true) | .height") * 100))
+    ACTIVE_MONITOR_SCALE=$(awk "BEGIN {printf $(hyprctl monitors -j | jq -r ".[] | select(.focused==true) | .scale") * 100}")
+    ACTIVE_MONITOR_WIDTH_SCALED=$(($ACTIVE_MONITOR_WIDTH / $ACTIVE_MONITOR_SCALE))
+    ACTIVE_MONITOR_HEIGHT_SCALED=$(($ACTIVE_MONITOR_HEIGHT / $ACTIVE_MONITOR_SCALE))
+  fi
 
   case "$POSITION" in
   "t" | "top")
@@ -227,7 +227,9 @@ if $FLOATING; then
   "b" | "bottom")
     if [[ -n $WIDTH ]]; then WIDTH_xy=$WIDTH; else WIDTH_xy="100"; fi
     if [[ -n $HEIGHT ]]; then HEIGHT_xy=$HEIGHT; else HEIGHT_xy="50"; fi
-    POSITION_xy="$((50 - $WIDTH_xy / 2))% $(($ACTIVE_MONITOR_HEIGHT_SCALED * $HEIGHT_xy / 100 - $GAP))"
+    if [[ $GAP -ne 0 ]]; then
+      POSITION_xy="$((50 - $WIDTH_xy / 2))% $(($ACTIVE_MONITOR_HEIGHT_SCALED * $HEIGHT_xy / 100 - $GAP))"
+    else POSITION_xy="$((50 - $WIDTH_xy / 2))% $((100 - $HEIGHT_xy))%"; fi
     ;;
   "l" | "left")
     if [[ -n $WIDTH ]]; then WIDTH_xy=$WIDTH; else WIDTH_xy="50"; fi
@@ -237,12 +239,15 @@ if $FLOATING; then
   "r" | "right")
     if [[ -n $WIDTH ]]; then WIDTH_xy=$WIDTH; else WIDTH_xy="50"; fi
     if [[ -n $HEIGHT ]]; then HEIGHT_xy=$HEIGHT; else HEIGHT_xy="100"; fi
-    POSITION_xy="$(($ACTIVE_MONITOR_WIDTH_SCALED * $WIDTH_xy / 100 - $GAP)) $((50 - $HEIGHT_xy / 2))%"
+    if [[ $GAP -ne 0 ]]; then
+      POSITION_xy="$(($ACTIVE_MONITOR_WIDTH_SCALED * $WIDTH_xy / 100 - $GAP)) $((50 - $HEIGHT_xy / 2))%"
+    else POSITION_xy="$((100 - $WIDTH_xy))% $((50 - $HEIGHT_xy / 2))%"; fi
     ;;
   *)
     notify "hdrop: --position -> invalid argument"
     ;;
   esac
+
   hyprctl --batch "keyword windowrule float,^$CLASS$ ; keyword windowrule move $POSITION_xy,^$CLASS$ ; keyword windowrule size $WIDTH_xy% $HEIGHT_xy%,^$CLASS$"
 fi
 
