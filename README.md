@@ -23,13 +23,13 @@ This Bash script emulates the main features of [tdrop](https://github.com/noctui
 > -c, --class  
 > Set classname of the program to be run. Use this if the classname is different from the name of the [COMMAND] and hdrop does not have a hardcoded replacement.
 >
-> -f, --floating
+> -f, --floating  
 > Spawn as a floating window. Standard is top half, full width, no gap. Can be adjusted with -g, -h, -p and -w.
 >
 > -g, --gap
 > If using --floating: specify gap to the screen edge in pixels.
 >
-> -h, --height
+> -h, --height  
 > If using --floating: set the height of the window. Enter percentage value without % sign, e.g. '30'.
 >
 > -H, --help  
@@ -38,7 +38,7 @@ This Bash script emulates the main features of [tdrop](https://github.com/noctui
 > -i, --insensitive  
 > Case insensitive partial matching of class names. Can work as a stopgap if a running program is not recognized and a new instance is launched instead. Note: incorrect matches may occur, adding a special handling of the program to hdrop (hardcoded or via `-c, --class`) is preferable.
 >
-> -p, --position
+> -p, --position  
 > If using --floating: set the position of the window. One of: '[t]op' '[b]ottom' '[l]eft' '[r]ight'.
 >
 > -v, --verbose  
@@ -47,7 +47,7 @@ This Bash script emulates the main features of [tdrop](https://github.com/noctui
 > -V, --version  
 > Print version
 >
-> -w, --width
+> -w, --width  
 > If using --floating: set the width of the window. Enter percentage value without % sign, e.g. '30'.
 
 #### Multiple instances:
@@ -101,7 +101,8 @@ Make sure that `bash` and `jq` are in your PATH.
 
 Download the script, make it executable and add it to your PATH.
 
-Note: `hdrop` will only work in a `Hyprland` session. `exec-once = hdrop -b` might not work with this installation method.
+Note: `hdrop` will only work in a `Hyprland` session.  
+`exec-once = hdrop -b` might not work with this installation method.
 
 ### Makefile
 

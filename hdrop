@@ -213,7 +213,9 @@ if $FLOATING; then
   if [[ $GAP -ne 0 ]]; then
     ACTIVE_MONITOR_WIDTH=$(($(hyprctl monitors -j | jq -r ".[] | select(.focused==true) | .width") * 100))
     ACTIVE_MONITOR_HEIGHT=$(($(hyprctl monitors -j | jq -r ".[] | select(.focused==true) | .height") * 100))
+    # ACTIVE_MONITOR_SCALE=$(echo "$(hyprctl monitors -j | jq -r '.[] | select(.focused==true) | .scale') * 100" | bc)
     ACTIVE_MONITOR_SCALE=$(awk "BEGIN {printf $(hyprctl monitors -j | jq -r ".[] | select(.focused==true) | .scale") * 100}")
+
     ACTIVE_MONITOR_WIDTH_SCALED=$(($ACTIVE_MONITOR_WIDTH / $ACTIVE_MONITOR_SCALE))
     ACTIVE_MONITOR_HEIGHT_SCALED=$(($ACTIVE_MONITOR_HEIGHT / $ACTIVE_MONITOR_SCALE))
   fi
