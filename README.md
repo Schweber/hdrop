@@ -26,7 +26,7 @@ This Bash script emulates the main features of [tdrop](https://github.com/noctui
 > -f, --floating  
 > Spawn as a floating window. Standard is top half, full width, no gap. Can be adjusted with -g, -h, -p and -w.
 >
-> -g, --gap
+> -g, --gap  
 > If using --floating: specify gap to the screen edge in pixels.
 >
 > -h, --height  
