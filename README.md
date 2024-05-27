@@ -75,7 +75,7 @@ If you want to run a program on boot and have it wait in the background until ca
 
 ### Cursor jumps to newly focused windows
 
-Set `no_cursor_warps = true` in `hyprland.conf` section [general](https://wiki.hyprland.org/Configuring/Variables/#general)
+Set `no_warps = true` in `hyprland.conf` section [cursor](https://wiki.hyprland.org/Configuring/Variables/#cursor)
 
 ### Further instances of programs are started instead of hiding/unhiding a running instance
 
@@ -85,7 +85,7 @@ Run `hdrop -v [COMMAND]` _in the terminal_ to see maximum output for troubleshoo
 
 Please report instances of programs with differing class names, so that they can be added to `hdrop`.
 
-### Floating windows don't react to changed arguments
+### Floating windows don't react to changed arguments in hdrop
 
 Close the program (don't just hide it with hdrop). The changed arguments are only applied when the program is restarted.
 
