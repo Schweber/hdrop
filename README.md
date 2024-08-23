@@ -75,7 +75,7 @@ If you want to run a program on boot and have it wait in the background until ca
 
 ### Cursor jumps to newly focused windows
 
-Set `no_warps = true` in `hyprland.conf` section [cursor](https://wiki.hyprland.org/Configuring/Variables/#cursor)
+Set `no_warps = true` in `hyprland.conf` section [cursor](https://wiki.hyprland.org/Configuring/Variables/#cursor).
 
 ### Further instances of programs are started instead of hiding/unhiding a running instance
 
@@ -85,9 +85,19 @@ Run `hdrop -v [COMMAND]` _in the terminal_ to see maximum output for troubleshoo
 
 Please report instances of programs with differing class names, so that they can be added to `hdrop`.
 
-### Floating windows don't react to changed arguments in hdrop
+### `--floating` windows don't react to changed arguments in hdrop
 
 Close the program (don't just hide it with hdrop). The changed arguments are only applied when the program is restarted.
+
+### `--floating` windows animation is only shown when the window is opened for the first time
+
+This is a known issue and no workaround is known to me.
+
+### `hdrop -b` is not working when used as autostart
+
+If hdrop isn't installed but just added to PATH, then you might have to use this instead:
+
+> exec-once = [workspace special:hdrop silent] hdrop [OPITONS] [COMMAND]
 
 ## Installation
 
