@@ -93,7 +93,7 @@ Close the program (don't just hide it with hdrop). The changed arguments are onl
 
 This is a known issue and no workaround is known to me.
 
-### `hdrop -b` is not working when used as autostart
+### `hdrop -b` is not working when used forautostart
 
 If hdrop isn't installed but just added to PATH, then you might have to use this instead:
 

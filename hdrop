@@ -265,6 +265,9 @@ elif [[ $(hyprctl clients -j | jq -r ".[] | select(.class==\"$CLASS\" and .works
   if $VERBOSE; then notify_low "hdrop: Matched class '$CLASS' on current workspace and moved it to workspace 'special:hdrop'"; fi
 else
   # shellcheck disable=SC2086 # quoting COMMANDLINE=foot -a foot_1 doesn't work
-  $BACKGROUND $COMMANDLINE || notify "hdrop: Error executing given command" "$COMMANDLINE"
+  # notify $COMMANDLINE
+  # if $COMMANDLINE | grep -vq "foot"; then notify "hdrop: foot detected"; fi # $BACKGROUND $COMMANDLINE || if $COMMANDLINE | grep -vq foot; then notify "hdrop: Error executing given command" "$COMMANDLINE"; fi
+  # $BACKGROUND $COMMANDLINE || notify "hdrop: Error executing given command" "$COMMANDLINE"
+  $BACKGROUND $COMMANDLINE
   if $VERBOSE; then notify_low "hdrop: No running program matches class '$CLASS'." "Currently active classes are '$(hyprctl clients -j | jq -r '.[] | select(.mapped==true) | .class' | sort | tr '\n' ' ')'. Executed '$COMMANDLINE' in case it was not running already."; fi
 fi
