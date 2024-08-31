@@ -107,7 +107,7 @@ If hdrop isn't installed but just added to PATH, then you might have to use this
 
 ### Manual
 
-Make sure that `bash` and `jq` are in your PATH.
+Make sure that `bash`, `jq` and `awk` (for using the `--floating` option) are in your PATH.
 
 Download the script, make it executable and add it to your PATH.
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# set -euo pipefail
-
 # shellcheck disable=SC2004 # $ sign needed for the caclculations to take place
+
+set -eo pipefail
 
 print_help() {
   echo ""
@@ -70,7 +70,7 @@ print_help() {
 }
 
 print_version() {
-  echo "hdrop version: 0.5.0"
+  echo "hdrop version: 0.5.1"
 }
 
 notify() {
@@ -81,6 +81,10 @@ notify() {
 notify_low() {
   notify-send -u low "$@" || hyprctl notify 1 5000 0 "$@"
   echo "$@"
+}
+
+partial_match() {
+  CLASS=$(hyprctl clients -j | jq -r ".[] | select((.class |match(\"$1\";\"i\"))) | .class" | head -1)
 }
 
 BACKGROUND=""
@@ -171,8 +175,14 @@ COMMANDLINE="${*:1}"
 ACTIVE_WORKSPACE="$(hyprctl activeworkspace -j | jq -r .id)" || notify "hdrop: Error executing dependencies 'hyprctl' or 'jq'" "Check terminal output of 'hdrop $COMMANDLINE'"
 
 case "$1" in
+epiphany)
+  CLASS="org.gnome.Epiphany"
+  ;;
 foot)
   OPT=$(getopt --options a: -n hdrop -- "$@")
+  ;;
+godot4)
+  partial_match "org.godotengine."
   ;;
 logseq)
   CLASS="Logseq"
@@ -200,9 +210,9 @@ if [[ -n $OPT ]]; then
   esac
 fi
 
-if $INSENSITIVE && [[ $(hyprctl clients -j | jq -r ".[] | select((.class |test(\"$CLASS\";\"i\")))") ]]; then
+if $INSENSITIVE && [[ $(hyprctl clients -j | jq -r ".[] | select((.class |match(\"$CLASS\";\"i\"))) | .class") ]]; then
   if $VERBOSE; then notify_low "hdrop: --insensitive -> Insensitive (partial) match of class '$CLASS' successful"; fi
-  CLASS=$(hyprctl clients -j | jq -r ".[] | select((.class |match(\"$CLASS\";\"i\"))) | .class" | head -1) || notify "hdrop: Error assigning case insensitive (partial) match to CLASS"
+  partial_match "$CLASS" || notify "hdrop: Error assigning case insensitive (partial) match to CLASS"
   if $VERBOSE; then notify_low "hdrop: --insensitive -> Using class '$CLASS' after insensitive (partial) matching"; fi
 fi
 
@@ -215,7 +225,6 @@ if $FLOATING; then
   if [[ $GAP -ne 0 ]]; then
     ACTIVE_MONITOR_WIDTH=$(($(hyprctl monitors -j | jq -r ".[] | select(.focused==true) | .width") * 100))
     ACTIVE_MONITOR_HEIGHT=$(($(hyprctl monitors -j | jq -r ".[] | select(.focused==true) | .height") * 100))
-    # ACTIVE_MONITOR_SCALE=$(echo "$(hyprctl monitors -j | jq -r '.[] | select(.focused==true) | .scale') * 100" | bc)
     ACTIVE_MONITOR_SCALE=$(awk "BEGIN {printf $(hyprctl monitors -j | jq -r ".[] | select(.focused==true) | .scale") * 100}")
 
     ACTIVE_MONITOR_WIDTH_SCALED=$(($ACTIVE_MONITOR_WIDTH / $ACTIVE_MONITOR_SCALE))
@@ -264,10 +273,7 @@ elif [[ $(hyprctl clients -j | jq -r ".[] | select(.class==\"$CLASS\" and .works
   hyprctl dispatch -- movetoworkspacesilent special:hdrop,"^$CLASS$" || notify "hdrop: Error moving '$COMMANDLINE' to workspace 'special:hdrop'"
   if $VERBOSE; then notify_low "hdrop: Matched class '$CLASS' on current workspace and moved it to workspace 'special:hdrop'"; fi
 else
-  # shellcheck disable=SC2086 # quoting COMMANDLINE=foot -a foot_1 doesn't work
-  # notify $COMMANDLINE
-  # if $COMMANDLINE | grep -vq "foot"; then notify "hdrop: foot detected"; fi # $BACKGROUND $COMMANDLINE || if $COMMANDLINE | grep -vq foot; then notify "hdrop: Error executing given command" "$COMMANDLINE"; fi
-  # $BACKGROUND $COMMANDLINE || notify "hdrop: Error executing given command" "$COMMANDLINE"
-  $BACKGROUND $COMMANDLINE
+  # shellcheck disable=SC2086 # when quoting COMMANDLINE the execution of the command fails
+  $BACKGROUND $COMMANDLINE || notify "hdrop: Error executing given command" "$COMMANDLINE"
   if $VERBOSE; then notify_low "hdrop: No running program matches class '$CLASS'." "Currently active classes are '$(hyprctl clients -j | jq -r '.[] | select(.mapped==true) | .class' | sort | tr '\n' ' ')'. Executed '$COMMANDLINE' in case it was not running already."; fi
 fi
