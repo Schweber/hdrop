@@ -68,7 +68,7 @@ print_help() {
 }
 
 print_version() {
-  echo "hdrop version: 0.5.2"
+  echo "hdrop version: 0.5.3"
 }
 
 notify() {
@@ -201,7 +201,7 @@ if $VERBOSE && [[ $1 -ne $CLASS ]]; then notify_low "hdrop: Using '$CLASS' as ha
 if [[ -n $OPT ]]; then
   eval set -- "$OPT" # remove leading whitespace
   case "$1" in
-  -a | --class)
+  -a | --app-id | --class)
     CLASS="$2"
     if $VERBOSE; then notify_low "hdrop: Extracted '$CLASS' from [COMMAND] for matching"; fi
     ;;
