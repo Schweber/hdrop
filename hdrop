@@ -2,8 +2,6 @@
 
 # shellcheck disable=SC2004 # $ sign needed for the caclculations to take place
 
-set -eo pipefail
-
 print_help() {
   echo ""
   echo "Usage: hdrop [OPTIONS] [COMMAND]"
@@ -70,7 +68,7 @@ print_help() {
 }
 
 print_version() {
-  echo "hdrop version: 0.5.1"
+  echo "hdrop version: 0.5.2"
 }
 
 notify() {
@@ -86,13 +84,6 @@ notify_low() {
 partial_match() {
   CLASS=$(hyprctl clients -j | jq -r ".[] | select((.class |match(\"$1\";\"i\"))) | .class" | head -1)
 }
-
-BACKGROUND=""
-GAP=0
-INSENSITIVE=false
-FLOATING=false
-POSITION="top"
-VERBOSE=false
 
 hdrop_flags() {
   while true; do
@@ -143,6 +134,12 @@ hdrop_flags() {
   done
 }
 
+BACKGROUND=""
+GAP=0
+INSENSITIVE=false
+FLOATING=false
+POSITION="top"
+VERBOSE=false
 HDROP_FLAGS=()
 
 while true; do
@@ -171,6 +168,7 @@ if [[ -n $HDROP_FLAGS ]]; then
 fi
 
 CLASS="$1"
+COMMAND="$1"
 COMMANDLINE="${*:1}"
 ACTIVE_WORKSPACE="$(hyprctl activeworkspace -j | jq -r .id)" || notify "hdrop: Error executing dependencies 'hyprctl' or 'jq'" "Check terminal output of 'hdrop $COMMANDLINE'"
 
@@ -179,7 +177,7 @@ epiphany)
   CLASS="org.gnome.Epiphany"
   ;;
 foot)
-  OPT=$(getopt --options a: -n hdrop -- "$@")
+  OPT=$(getopt --options a: --longoptions app-id: -n hdrop -- "$@")
   ;;
 godot4)
   partial_match "org.godotengine."
@@ -194,7 +192,7 @@ tor-browser)
   CLASS="Tor Browser"
   ;;
 *)
-  OPT=$(getopt --longoptions class: -n hdrop -- "$@")
+  OPT=$(getopt --options "" --longoptions class: -n hdrop -- "$@")
   ;;
 esac
 
@@ -210,7 +208,7 @@ if [[ -n $OPT ]]; then
   esac
 fi
 
-if $INSENSITIVE && [[ $(hyprctl clients -j | jq -r ".[] | test((.class |match(\"$CLASS\";\"i\"))) | .class") ]]; then
+if $INSENSITIVE && [[ $(hyprctl clients -j | jq -r ".[] | select((.class |test(\"$CLASS\";\"i\")))") ]]; then
   if $VERBOSE; then notify_low "hdrop: --insensitive -> Insensitive (partial) match of class '$CLASS' successful"; fi
   partial_match "$CLASS" || notify "hdrop: Error assigning case insensitive (partial) match to CLASS"
   if $VERBOSE; then notify_low "hdrop: --insensitive -> Using class '$CLASS' after insensitive (partial) matching"; fi
@@ -273,7 +271,13 @@ elif [[ $(hyprctl clients -j | jq -r ".[] | select(.class==\"$CLASS\" and .works
   hyprctl dispatch -- movetoworkspacesilent special:hdrop,"^$CLASS$" || notify "hdrop: Error moving '$COMMANDLINE' to workspace 'special:hdrop'"
   if $VERBOSE; then notify_low "hdrop: Matched class '$CLASS' on current workspace and moved it to workspace 'special:hdrop'"; fi
 else
-  # shellcheck disable=SC2086 # when quoting COMMANDLINE the execution of the command fails
-  $BACKGROUND $COMMANDLINE || notify "hdrop: Error executing given command" "$COMMANDLINE"
+  # 'foot' always throws an error when its window is closed. Thus we disable the notification.
+  if [[ $COMMAND == "foot" ]]; then
+    # shellcheck disable=SC2086 # when quoting COMMANDLINE the execution of the command fails
+    $BACKGROUND $COMMANDLINE
+  else
+    # shellcheck disable=SC2086 # when quoting COMMANDLINE the execution of the command fails
+    $BACKGROUND $COMMANDLINE || notify "hdrop: Error executing given command" "$COMMANDLINE"
+  fi
   if $VERBOSE; then notify_low "hdrop: No running program matches class '$CLASS'." "Currently active classes are '$(hyprctl clients -j | jq -r '.[] | select(.mapped==true) | .class' | sort | tr '\n' ' ')'. Executed '$COMMANDLINE' in case it was not running already."; fi
 fi
