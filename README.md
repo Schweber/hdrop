@@ -85,6 +85,10 @@ Run `hdrop -v [COMMAND]` _in the terminal_ to see maximum output for troubleshoo
 
 Please report instances of programs with differing class names, so that they can be added to `hdrop`.
 
+### Windows freeze when being called up from another workspace
+
+This happens sometimes and will apparently be fixed in hyprland 0.43
+
 ### `--floating` windows don't react to changed arguments in hdrop
 
 Close the program (don't just hide it with hdrop). The changed arguments are only applied when the program is restarted.
