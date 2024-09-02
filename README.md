@@ -101,7 +101,7 @@ This is a known issue and no workaround is known to me.
 
 If hdrop isn't installed but just added to PATH, then you might have to use this instead:
 
-> exec-once = [workspace special:hdrop silent] hdrop [OPITONS] [COMMAND]
+> exec-once = [workspace special:hdrop silent] hdrop [OPTIONS] [COMMAND]
 
 ## Installation
 
