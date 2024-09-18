@@ -1,6 +1,6 @@
 # hdrop
 
-This Bash script emulates the main features of [tdrop](https://github.com/noctuid/tdrop) in Hyprland:
+This Bash script emulates the main features of [tdrop](https://github.com/noctuid/tdrop) in [Hyprland](https://github.com/hyprwm/Hyprland):
 
 - if the specified program is not running: launch it and bring it to the foreground.
 - if the specified program is already running on another workspace: bring it to the current workspace and focus it.
