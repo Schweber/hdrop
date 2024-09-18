@@ -41,6 +41,9 @@ This Bash script emulates the main features of [tdrop](https://github.com/noctui
 > -i, --insensitive  
 > Case insensitive partial matching of class names. Can work as a stopgap if a running program is not recognized and a new instance is launched instead. Note: incorrect matches may occur, adding a special handling of the program to hdrop (hardcoded or via `-c, --class`) is preferable.
 >
+> -o, --online  
+> Wait until internet connectivity is established.
+>
 > -p, --position  
 > If using --floating: set the position of the window. One of: '[t]op' '[b]ottom' '[l]eft' '[r]ight'.
 >
@@ -68,7 +71,8 @@ Multiple instances of the same program can be run concurrently, if different cla
 > bind = $mainMod, c, exec, hdrop foot -a foot_1  
 > bind = $mainMod CTRL, c, exec, hdrop foot -a foot_2
 
-Note: defining a class name is only necessary when running several instances of the same program.
+> \[!NOTE]
+> Defining a class name is only necessary when running several instances of the same program.
 
 If you want to run a program on boot and have it wait in the background until called up by hdrop you can use this:
 
@@ -128,3 +132,6 @@ Use the provided Makefile.
 ## See also
 
 `hdrop` is part of [hyprwm/contrib](https://github.com/hyprwm/contrib), which is a collection of useful scripts for `Hyprland`.
+
+[ndrop](https://github.com/schweber/ndrop) is the equivalent for [niri](https://github.com/YaLTeR/niri).
+
