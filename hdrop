@@ -94,8 +94,8 @@ partial_match() {
   CLASS=$(hyprctl clients -j | jq -r ".[] | select((.class |match(\"$1\";\"i\"))) | .class" | head -1)
 }
 
-wait_online=0
 wait_online() {
+  wait_online=0
   while [[ $wait_online -lt 200 ]]; do
     ping -qc 1 -w 20 -i 0.1 github.com && break
     sleep 0.1
@@ -281,7 +281,7 @@ if $FLOATING; then
     ;;
   esac
 
-  hyprctl --batch "keyword windowrule float,^$CLASS$ ; keyword windowrule move $POSITION_xy,^$CLASS$ ; keyword windowrule size $WIDTH_xy% $HEIGHT_xy%,^$CLASS$"
+  hyprctl --batch "keyword windowrule float,class:^$CLASS$ ; keyword windowrule move $POSITION_xy,class:^$CLASS$ ; keyword windowrule size $WIDTH_xy% $HEIGHT_xy%,class:^$CLASS$"
 fi
 
 if [[ -n $(hyprctl clients -j | jq -r ".[] | select(.class==\"$CLASS\" and .workspace.id!=$ACTIVE_WORKSPACE)") ]]; then
