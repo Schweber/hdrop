@@ -77,7 +77,7 @@ print_help() {
 }
 
 print_version() {
-  echo "hdrop version: 0.7.0-dev"
+  echo "hdrop version: 0.7.2"
 }
 
 notify() {
