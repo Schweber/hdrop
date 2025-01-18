@@ -134,6 +134,9 @@ hdrop_flags() {
     -i | --insensitive)
       INSENSITIVE=true
       ;;
+    -o | --online)
+      ONLINE=true
+      ;;
     -p | --position)
       shift
       POSITION="$1"
@@ -159,6 +162,7 @@ BACKGROUND=""
 FOCUS=false
 GAP=0
 INSENSITIVE=false
+ONLINE=false
 FLOATING=false
 POSITION="top"
 VERBOSE=false
