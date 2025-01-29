@@ -77,7 +77,7 @@ print_help() {
 }
 
 print_version() {
-  echo "hdrop version: 0.7.4"
+  echo "hdrop version: 0.7.5"
 }
 
 notify() {
@@ -285,7 +285,7 @@ if $FLOATING; then
     ;;
   esac
 
-  hyprctl --batch "keyword windowrule float,class:^$CLASS$ ; keyword windowrule move $POSITION_xy,class:^$CLASS$ ; keyword windowrule size $WIDTH_xy% $HEIGHT_xy%,class:^$CLASS$"
+  hyprctl --batch "keyword windowrule float,^$CLASS$ ; keyword windowrule move $POSITION_xy,^$CLASS$ ; keyword windowrule size $WIDTH_xy% $HEIGHT_xy%,^$CLASS$"
 fi
 
 if [[ -n $(hyprctl clients -j | jq -r ".[] | select(.class==\"$CLASS\" and .workspace.id!=$ACTIVE_WORKSPACE)") ]]; then
