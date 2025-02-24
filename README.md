@@ -99,7 +99,7 @@ Please report instances of programs with differing class names, so that they can
 
 This happens sometimes and will apparently be fixed in hyprland 0.43
 
-### `--floating` windows don't react to changed arguments in hdrop
+### `--floating` windows don't react to changed position arguments in hdrop
 
 Close the program (don't just hide it with hdrop). The changed arguments are only applied when the program is restarted.
 
