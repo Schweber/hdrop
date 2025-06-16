@@ -196,7 +196,7 @@ fi
 CLASS="$1"
 COMMAND="$1"
 COMMANDLINE="${*:1}"
-ACTIVE_WORKSPACE="$(hyprctl -j activeworkspace | jq -r .id)" || notify "hdrop: Error executing dependencies 'hyprctl' or 'jq'" "Check terminal output of 'hdrop $COMMANDLINE'"
+ACTIVE_WORKSPACE="$(hyprctl -j activeworkspace | jq -r .name)" || notify "hdrop: Error executing dependencies 'hyprctl' or 'jq'" "Check terminal output of 'hdrop $COMMANDLINE'"
 
 case "$1" in
 epiphany)
@@ -292,15 +292,15 @@ if $FLOATING; then
   fi
 fi
 
-if [[ -n $(hyprctl -j clients | jq -r ".[] | select(.class==\"$CLASS\" and .workspace.id!=$ACTIVE_WORKSPACE)") ]]; then
+if [[ -n $(hyprctl -j clients | jq -r ".[] | select(.class==\"$CLASS\" and .workspace.name!=\"$ACTIVE_WORKSPACE\")") ]]; then
   if [[ $FOCUS == false ]]; then
     # shellcheck disable=SC2140 # erroneous warning
-    hyprctl dispatch -- movetoworkspacesilent "$ACTIVE_WORKSPACE","class:^$CLASS$" || notify "hdrop: Error moving '$COMMANDLINE' to current workspace"
+    hyprctl dispatch -- movetoworkspacesilent "name:$ACTIVE_WORKSPACE","class:^$CLASS$" || notify "hdrop: Error moving '$COMMANDLINE' to current workspace"
     if [[ $FLOATING ]]; then hyprctl dispatch -- resizewindowpixel exact "$WIDTH_xy% $HEIGHT_xy%", "class:^$CLASS$" || notify "hdrop: Error resizing window for active monitor"; fi
     if $VERBOSE; then notify_low "hdrop: Matched class '$CLASS' on another workspace and moved it to current workspace"; fi
   fi
   hyprctl dispatch -- focuswindow "class:^$CLASS$" || notify "hdrop: Error focusing '$COMMANDLINE' on current workspace"
-elif [[ -n $(hyprctl -j clients | jq -r ".[] | select(.class==\"$CLASS\" and .workspace.id==$ACTIVE_WORKSPACE)") ]]; then
+elif [[ -n $(hyprctl -j clients | jq -r ".[] | select(.class==\"$CLASS\" and .workspace.name==\"$ACTIVE_WORKSPACE\")") ]]; then
   if [[ $FOCUS == false ]]; then
     hyprctl dispatch -- movetoworkspacesilent special:hdrop,"class:^$CLASS$" || notify "hdrop: Error moving '$COMMANDLINE' to workspace 'special:hdrop'"
     if [[ $FLOATING ]]; then hyprctl dispatch -- resizewindowpixel exact "$WIDTH_xy% $HEIGHT_xy%", "class:^$CLASS$" || notify "hdrop: Error resizing window for active monitor"; fi
