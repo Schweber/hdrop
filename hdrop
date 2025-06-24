@@ -77,7 +77,7 @@ print_help() {
 }
 
 print_version() {
-  echo "hdrop version: 0.7.8"
+  echo "hdrop version: 0.7.9"
 }
 
 notify() {
@@ -97,7 +97,7 @@ partial_match() {
 wait_online() {
   wait_online=0
   while [[ $wait_online -lt 200 ]]; do
-    ping -qc 1 github.com && sleep 0.1 && ping -qc 1 github.com && break
+    ping -qc 1 -W 0.2 github.com && break
     sleep 0.1
     $wait_online++
   done
