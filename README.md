@@ -6,6 +6,9 @@ This Bash script emulates the main features of [tdrop](https://github.com/noctui
 - if the specified program is already running on another workspace: bring it to the current workspace and focus it.
 - if the specified program is already on the current workspace: move it to workspace 'special:hdrop', thereby hiding it until called up again by hdrop.
 
+> \[!NOTE]
+> I'm no longer using hyprland myself so i rely on user reports and their help in testing. I will try to fix issues that arise and i'm happy to accept tested PRs but please do not open issues with requests for new features/behaviours.
+
 #### Usage:
 
 > hdrop [OPTIONS] [COMMAND]
