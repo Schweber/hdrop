@@ -285,7 +285,10 @@ if $FLOATING; then
     ;;
   esac
 
-  if [[ $(hyprctl -j version | jq -r .version | tr '.' '\n' | head -n 2 | tail -n 1) -ge 48 ]]; then
+  if [[ $(hyprctl -j version | jq -r .version | tr '.' '\n' | head -n 2 | tail -n 1) -ge 53 ]]; then
+    hyprctl --batch "keyword windowrule match:class ^$CLASS$, float on; keyword windowrule match:class ^$CLASS$, move $POSITION_xy"
+    #hyprctl --batch "keyword windowrule match:class ^$CLASS$, float on, move $POSITION_xy"
+  elif [[ $(hyprctl -j version | jq -r .version | tr '.' '\n' | head -n 2 | tail -n 1) -ge 48 ]]; then
     hyprctl --batch "keyword windowrule float,class:^$CLASS$ ; keyword windowrule move $POSITION_xy,class:^$CLASS$"
   else
     hyprctl --batch "keyword windowrule float,^$CLASS$ ; keyword windowrule move $POSITION_xy,^$CLASS$"
