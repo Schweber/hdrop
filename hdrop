@@ -285,7 +285,14 @@ if $FLOATING; then
     ;;
   esac
 
-  if [[ $(hyprctl -j version | jq -r .version | tr '.' '\n' | head -n 2 | tail -n 1) -ge 48 ]]; then
+  if [[ $(hyprctl -j version | jq -r .version | tr '.' '\n' | head -n 2 | tail -n 1) -ge 53 ]]; then
+    # Not sure, why, but % is not working here
+    # TODO: Maybe check $POSITION to disable % there
+    if [[ $POSITION_xy =~ "0%" ]]; then
+      POSITION_xy="${POSITION_xy//%/}"
+    fi
+    hyprctl --batch "keyword windowrule match:class ^${CLASS}$, float on, move ${POSITION_xy}"
+  elif [[ $(hyprctl -j version | jq -r .version | tr '.' '\n' | head -n 2 | tail -n 1) -ge 48 ]]; then
     hyprctl --batch "keyword windowrule float,class:^$CLASS$ ; keyword windowrule move $POSITION_xy,class:^$CLASS$"
   else
     hyprctl --batch "keyword windowrule float,^$CLASS$ ; keyword windowrule move $POSITION_xy,^$CLASS$"
